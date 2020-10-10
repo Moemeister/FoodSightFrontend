@@ -1,29 +1,63 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-//Colores de la app
-const _appBarColor = const Color(0xFF0099AD);
-const _buttonOrangeColor = const Color(0xFFFB7813);
-const _backgroundWhite = const Color(0xFFF7F7EE);
-const _theGreen = const Color(0xFFB6EB7A);
+//Colores de la app no mover de acá.
+const _primaryColor = Color(0xFFFF5722);
+const _darkPrimaryColor = Color(0xFFE64A19);
+const _lightPrimaryColor = Color(0xFFFFCCBC);
+const _accentColor = Color(0xFF8BC34A);
+const _dividerColor = Color(0xFFBDBDBD);
 
-void main() => runApp(FoodSight());
+//Colores de texto. Habrá que copiarlos en cada .dart para usarlos
+// TODO: intentar añadirlos al ThemeData. De momento ver como usarlos
+const _primaryText = Color(0xFF212121);
+const _secondaryText = Color(0xFF757575);
+const _textsIcons = Color(0xFFFFFFFF);
 
-class FoodSight extends StatefulWidget {
-  @override
-  _FoodSightState createState() => _FoodSightState();
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(FoodSight());
 }
 
-class _FoodSightState extends State<FoodSight> {
+class FoodSight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'FoodSight',
+      theme: ThemeData(
+        errorColor: Colors.red,
+        primaryColor: _primaryColor,
+        primaryColorLight: _lightPrimaryColor,
+        primaryColorDark: _darkPrimaryColor,
+        accentColor: _accentColor,
+        dividerColor: _dividerColor,
+      ),
       home: Scaffold(
-        backgroundColor: _backgroundWhite,
         appBar: AppBar(
           title: Text('FoodSight'),
-          backgroundColor: _appBarColor,
         ),
-        body: null,
+        body: Column(
+          //TODO: Esta columna es solo de ejemplo, acá ira el Widget principal..
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: FittedBox(
+                child: Text(
+                  'Headline1',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1
+                      .apply(color: _primaryText),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
