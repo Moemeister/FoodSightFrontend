@@ -36,28 +36,40 @@ class FoodSight extends StatelessWidget {
         accentColor: _accentColor,
         dividerColor: _dividerColor,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('FoodSight'),
-        ),
-        body: Column(
-          //TODO: Esta columna es solo de ejemplo, acá ira el Widget principal..
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              child: FittedBox(
-                child: Text(
-                  'Headline1',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline1
-                      .apply(color: _primaryText),
-                ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('FoodSight'),
+      ),
+      body: Column(
+        //TODO: Esta columna es solo de ejemplo, acá ira el Widget principal..
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: FittedBox(
+              child: Text(
+                'Headline1',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    .apply(color: _primaryText),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
