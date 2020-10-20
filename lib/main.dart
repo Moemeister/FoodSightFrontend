@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import './screens/restaurants_screen.dart';
+import './screens/my_home_aux_screen.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -37,48 +38,11 @@ class FoodSight extends StatelessWidget {
         primaryColorDark: _darkPrimaryColor,
         accentColor: _accentColor,
         dividerColor: _dividerColor,
-        
       ),
       home: MyHomePage(),
       routes: {
         RestaurantsScreen.screenRoute: (context) => RestaurantsScreen(),
       },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-void selectRestaurant (BuildContext ctx){
-  Navigator.of(ctx).pushNamed(RestaurantsScreen.screenRoute);
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('FoodSight'),
-      ),
-      body: Column(
-        children: [
-          InkWell(
-          onTap: () => selectRestaurant(context),
-          child: Container(
-              margin: EdgeInsets.all(10),
-              height: 50,
-              width: 200,
-              color: Colors.amber,
-              child: Center(child: Text ("Catalogo de Restaurante")),
-            ),
-        ),
-        ],
-      )
-        
-
     );
   }
 }

@@ -1,1 +1,0 @@
-File to make Github detect the folder... In this folder there will be all the models used for the App.
