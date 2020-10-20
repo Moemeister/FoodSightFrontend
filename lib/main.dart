@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
+import './screens/restaurants_screen.dart';
+
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
 const _darkPrimaryColor = Color(0xFFE64A19);
@@ -35,8 +37,12 @@ class FoodSight extends StatelessWidget {
         primaryColorDark: _darkPrimaryColor,
         accentColor: _accentColor,
         dividerColor: _dividerColor,
+        
       ),
       home: MyHomePage(),
+      routes: {
+        RestaurantsScreen.screenRoute: (context) => RestaurantsScreen(),
+      },
     );
   }
 }
@@ -44,6 +50,10 @@ class FoodSight extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
+}
+
+void selectRestaurant (BuildContext ctx){
+  Navigator.of(ctx).pushNamed(RestaurantsScreen.screenRoute);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -54,23 +64,21 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('FoodSight'),
       ),
       body: Column(
-        //TODO: Esta columna es solo de ejemplo, acá ira el Widget principal..
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            alignment: Alignment.center,
-            child: FittedBox(
-              child: Text(
-                'Headline1',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1
-                    .apply(color: _primaryText),
-              ),
+          InkWell(
+          onTap: () => selectRestaurant(context),
+          child: Container(
+              margin: EdgeInsets.all(10),
+              height: 50,
+              width: 200,
+              color: Colors.amber,
+              child: Center(child: Text ("Catalogo de Restaurante")),
             ),
-          ),
+        ),
         ],
-      ),
+      )
+        
+
     );
   }
 }
