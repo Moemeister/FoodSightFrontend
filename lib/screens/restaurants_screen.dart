@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import '../widgets/restaurant_grid.dart';
+import '../widgets/drawer.dart';
 
-class RestaurantsScreen extends StatelessWidget {
+class RestaurantsScreen extends StatefulWidget {
+  @override
+  _RestaurantsScreenState createState() => _RestaurantsScreenState();
+}
 
-  static final screenRoute = "/restaurantsScreen";
-
+class _RestaurantsScreenState extends State<RestaurantsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Restaurantes")
+        title: Text('FoodSight'),
       ),
-      body: 
-        Center(child: 
-          Text("Hello!")
-       )
+      drawer: MainDrawer(),
+      body: RestaurantGrid(),
     );
   }
 }

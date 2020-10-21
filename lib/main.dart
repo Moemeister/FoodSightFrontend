@@ -1,8 +1,10 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './screens/restaurants_screen.dart';
-import './screens/my_home_aux_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'providers/restaurants.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -29,20 +31,41 @@ void main() {
 class FoodSight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FoodSight',
-      theme: ThemeData(
-        errorColor: Colors.red,
-        primaryColor: _primaryColor,
-        primaryColorLight: _lightPrimaryColor,
-        primaryColorDark: _darkPrimaryColor,
-        accentColor: _accentColor,
-        dividerColor: _dividerColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Restaurants(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'FoodSight',
+        theme: ThemeData(
+          errorColor: Colors.red,
+          primaryColor: _primaryColor,
+          primaryColorLight: _lightPrimaryColor,
+          primaryColorDark: _darkPrimaryColor,
+          accentColor: _accentColor,
+          dividerColor: _dividerColor,
+          fontFamily: 'RobotoCondensed',
+          textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'RobotoCondensed',
+                  fontWeight: FontWeight.bold,
+                  color: _textsIcons,
+                ),
+                headline5: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'RobotoCondensed',
+                  fontWeight: FontWeight.bold,
+                  color: _primaryText,
+                ),
+              ),
+        ),
+        routes: {
+          '/': (context) => RestaurantsScreen(),
+        },
       ),
-      home: MyHomePage(),
-      routes: {
-        RestaurantsScreen.screenRoute: (context) => RestaurantsScreen(),
-      },
     );
   }
 }

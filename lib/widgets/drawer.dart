@@ -46,7 +46,7 @@ class MainDrawer extends StatelessWidget {
           'Restaurants',
           Icons.restaurant,
           () {
-            Navigator.of(context).pushNamed(RestaurantsScreen.screenRoute);
+            Navigator.of(context).pushReplacementNamed('/');
           },
         ),
       ],

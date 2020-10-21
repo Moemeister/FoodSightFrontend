@@ -32,6 +32,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  provider: ^4.3.2+2
+  intl: ^0.16.1
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -60,7 +64,14 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/RobotoCondensed-Regular.ttf
+        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/RobotoCondensed-Light.ttf
+          weight: 300
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
