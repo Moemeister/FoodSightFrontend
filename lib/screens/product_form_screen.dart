@@ -24,9 +24,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     id: null,
     name: '',
     description: '',
-    rating: 0,
+    rating: 0.0,
     image: '',
-    price: 0,
+    price: 0.0,
   );
 
   @override
@@ -54,11 +54,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   void _saveForm() {
     Fluttertoast.showToast(
-        msg: "Restaurant Saved",
+        msg: "Product Saved",
         toastLength: Toast.LENGTH_LONG,
         backgroundColor: Theme.of(context).accentColor,
         textColor: Colors.white);
-    _formKey.currentState.save();
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+    }
+
     Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
 
     Navigator.of(context).popAndPushNamed('/');
@@ -95,6 +98,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       FocusScope.of(context).requestFocus(_descFocusNode);
                     },
                     onSaved: (value) {
+                      print(value);
                       _editedProduct = Product(
                           id: null,
                           name: value,
@@ -127,6 +131,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       }
                       return null;
                     },
+                    onFieldSubmitted: (value) {
+                      FocusScope.of(context).requestFocus(_priceFocusNode);
+                    },
                     onSaved: (value) {
                       _editedProduct = Product(
                           id: null,
@@ -152,6 +159,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         return 'El precio no puede ser vacio';
                       }
                       return null;
+                    },
+                    onFieldSubmitted: (value) {
+                      FocusScope.of(context).requestFocus(_imageUrlFocusNode);
                     },
                     onSaved: (value) {
                       _editedProduct = Product(

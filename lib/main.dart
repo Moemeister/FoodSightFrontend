@@ -1,3 +1,4 @@
+import 'package:FoodSight/providers/product.dart';
 import 'package:FoodSight/screens/product_form_screen.dart';
 import 'package:FoodSight/screens/restaurant_form_screen.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,9 @@ class FoodSight extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (ctx) => Restaurants(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Products(),
         ),
       ],
       child: MaterialApp(
