@@ -6,6 +6,8 @@ import '../screens/restaurant_detail.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //final String idRestaurant =
+    //    ModalRoute.of(context).settings.arguments as String;
     final singleProduct = Provider.of<Product>(context, listen: false);
 
     return Container(

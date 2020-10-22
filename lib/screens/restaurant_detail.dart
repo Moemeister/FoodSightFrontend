@@ -3,14 +3,15 @@ import 'package:provider/provider.dart';
 
 import '../providers/products.dart';
 import '../widgets/product_item.dart';
+import '../screens/restaurant_info.dart';
 
 class RestaurantDetail extends StatelessWidget {
   static final routeName = "/restaurant-detail";
   final String id;
 
-  /*void tappedInfo (BuildContext ctx) {
-    Navigator.of(ctx).pushNamed()
-  }*/
+  void tappedInfo(BuildContext ctx, id) {
+    Navigator.of(ctx).pushNamed(RestaurantInformation.routeName, arguments: id);
+  }
 
   RestaurantDetail({this.id});
 
@@ -24,9 +25,9 @@ class RestaurantDetail extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Text("Restaurant Detail"),
+            Text("Restaurant Detail ${id}"),
             InkWell(
-              onTap: null, //() => tappedInfo(context),
+              onTap: () => tappedInfo(context, id),
               child: Icon(Icons.info),
             ),
           ],
