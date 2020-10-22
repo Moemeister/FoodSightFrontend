@@ -19,13 +19,13 @@ class RestaurantDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final String id = ModalRoute.of(context).settings.arguments as String;
     final productsData = Provider.of<Products>(context, listen: false);
-    final products = productsData.items;
+    final products = productsData.productsOfRestaurant(id);
 
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Text("Restaurant Detail ${id}"),
+            Text("Restaurant Detail $id"),
             InkWell(
               onTap: () => tappedInfo(context, id),
               child: Icon(Icons.info),

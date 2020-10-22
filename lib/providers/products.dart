@@ -21,6 +21,16 @@ class Products with ChangeNotifier {
         imageUrl:
             "https://cdn-pro.elsalvador.com/wp-content/uploads/2018/01/Chory.jpg",
         rating: 5.0),
+    Product(
+      id: 'p3',
+      idRestaurant: "r1",
+      name: 'Pollo',
+      description: 'guisado',
+      price: 12.0,
+      imageUrl:
+          'https://live.mrf.io/statics/i/ps/www.cocinacaserayfacil.net/wp-content/uploads/2017/07/pollo-guisado-con-verduras-receta.jpg?width=1200&enable=upscale',
+      rating: 4.3,
+    ),
   ];
 
   List<Product> get items {
@@ -29,6 +39,10 @@ class Products with ChangeNotifier {
 
   Product findById(String id) {
     return _items.firstWhere((element) => element.id == id);
+  }
+
+  List<Product> productsOfRestaurant(String resId) {
+    return _items.where((element) => element.idRestaurant == resId).toList();
   }
 
   void addProduct(Product product) {

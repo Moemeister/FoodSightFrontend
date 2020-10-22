@@ -1,7 +1,6 @@
-import 'package:FoodSight/models/product.dart';
-
 import '../models/product.dart';
-import '../providers/product.dart';
+
+import '../providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,7 +24,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     name: '',
     description: '',
     rating: 0.0,
-    image: '',
+    imageUrl: '',
     price: 0.0,
   );
 
@@ -106,7 +105,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           description: _editedProduct.description,
                           price: _editedProduct.price,
                           rating: _editedProduct.rating,
-                          image: _editedProduct.image);
+                          imageUrl: _editedProduct.imageUrl);
                     },
                     validator: (value) {
                       if (value.isEmpty) {
@@ -142,7 +141,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           description: value,
                           price: _editedProduct.price,
                           rating: _editedProduct.rating,
-                          image: _editedProduct.image);
+                          imageUrl: _editedProduct.imageUrl);
                     },
                   ),
                   TextFormField(
@@ -171,7 +170,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           description: _editedProduct.description,
                           price: double.parse(value),
                           rating: _editedProduct.rating,
-                          image: _editedProduct.image);
+                          imageUrl: _editedProduct.imageUrl);
                     },
                   ),
                   Row(
@@ -219,7 +218,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                 description: _editedProduct.description,
                                 price: _editedProduct.price,
                                 rating: _editedProduct.rating,
-                                image: value);
+                                imageUrl: value);
                           },
                         ),
                       ),

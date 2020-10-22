@@ -1,6 +1,6 @@
-import 'package:FoodSight/providers/product.dart';
-import 'package:FoodSight/screens/product_form_screen.dart';
-import 'package:FoodSight/screens/restaurant_form_screen.dart';
+import './providers/products.dart';
+import './screens/product_form_screen.dart';
+import './screens/restaurant_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import './screens/restaurants_screen.dart';
 import './screens/restaurant_detail.dart';
 import './screens/restaurant_info.dart';
-import 'providers/restaurants.dart';
+import './providers/restaurants.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
