@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import './screens/restaurants_screen.dart';
 import 'package:provider/provider.dart';
 
+import './screens/restaurants_screen.dart';
+import './screens/restaurant_detail.dart';
 import 'providers/restaurants.dart';
 
 //Colores de la app no mover de acá.
@@ -64,6 +65,7 @@ class FoodSight extends StatelessWidget {
         ),
         routes: {
           '/': (context) => RestaurantsScreen(),
+          RestaurantDetail.routeName: (context) => RestaurantDetail(),
         },
       ),
     );
