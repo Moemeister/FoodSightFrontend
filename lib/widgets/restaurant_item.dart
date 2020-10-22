@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
+import '../screens/restaurant_detail.dart';
 
 class RestaurantItem extends StatelessWidget {
+  void selectedRestaurant(BuildContext ctx, String id) {
+    Navigator.of(ctx).pushNamed(RestaurantDetail.routeName, arguments: id);
+  }
+
   @override
   Widget build(BuildContext context) {
     final singleRestaurant = Provider.of<Restaurant>(context, listen: false);
     return Container(
       child: InkWell(
-        onTap: () {},
+        onTap: () => selectedRestaurant(context, singleRestaurant.id),
         child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
