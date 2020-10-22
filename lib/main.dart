@@ -1,3 +1,4 @@
+import 'package:FoodSight/screens/restaurant_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -64,6 +65,7 @@ class FoodSight extends StatelessWidget {
         ),
         routes: {
           '/': (context) => RestaurantsScreen(),
+          RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
         },
       ),
     );

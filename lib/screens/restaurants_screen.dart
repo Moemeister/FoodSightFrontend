@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/restaurant_grid.dart';
 import '../widgets/drawer.dart';
 
@@ -50,7 +51,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
         ],
       ),
       drawer: MainDrawer(),
-      body: RestaurantGrid(_selectedPriceCategory),
+      body: RestaurantListView(_selectedPriceCategory),
     );
   }
 }

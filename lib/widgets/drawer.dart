@@ -1,6 +1,5 @@
+import 'package:FoodSight/screens/restaurant_form_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../screens/restaurants_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
@@ -47,6 +46,14 @@ class MainDrawer extends StatelessWidget {
           Icons.restaurant,
           () {
             Navigator.of(context).pushReplacementNamed('/');
+          },
+        ),
+        SizedBox(height: 20),
+        buildListTile(
+          'Add New Restaurant',
+          Icons.add_circle_outline,
+          () {
+            Navigator.of(context).pushNamed(RestaurantFormScreen.routeName);
           },
         ),
       ],

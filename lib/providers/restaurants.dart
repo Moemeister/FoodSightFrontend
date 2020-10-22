@@ -52,4 +52,24 @@ class Restaurants with ChangeNotifier {
   Restaurant findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
+
+  void addRestaurant(Restaurant restaurant) {
+    final newRestaurant = Restaurant(
+      id: DateTime.now().toString(),
+      address: restaurant.address,
+      description: restaurant.description,
+      email: restaurant.email,
+      fbUrl: restaurant.fbUrl,
+      rating: restaurant.rating,
+      instaUrl: restaurant.instaUrl,
+      location: restaurant.location,
+      name: restaurant.name,
+      password: restaurant.password,
+      phone: restaurant.phone,
+      photoUrl: restaurant.photoUrl,
+      priceCategory: restaurant.priceCategory,
+    );
+    _items.add(newRestaurant);
+    notifyListeners();
+  }
 }
