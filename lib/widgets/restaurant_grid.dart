@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/restaurant.dart';
 import '../providers/restaurants.dart';
 import '../widgets/restaurant_item.dart';
 
-class RestaurantGrid extends StatelessWidget {
+class RestaurantListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final restaurantData = Provider.of<Restaurants>(context);

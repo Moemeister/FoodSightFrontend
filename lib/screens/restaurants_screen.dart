@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/restaurant_grid.dart';
 import '../widgets/drawer.dart';
 
-class RestaurantsScreen extends StatefulWidget {
-  @override
-  _RestaurantsScreenState createState() => _RestaurantsScreenState();
-}
-
-class _RestaurantsScreenState extends State<RestaurantsScreen> {
+class RestaurantsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +10,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
         title: Text('FoodSight'),
       ),
       drawer: MainDrawer(),
-      body: RestaurantGrid(),
+      body: RestaurantListView(),
     );
   }
 }
