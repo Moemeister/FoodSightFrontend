@@ -1,3 +1,4 @@
+import 'package:FoodSight/screens/product_form_screen.dart';
 import 'package:FoodSight/screens/restaurant_form_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +55,14 @@ class MainDrawer extends StatelessWidget {
           Icons.add_circle_outline,
           () {
             Navigator.of(context).pushNamed(RestaurantFormScreen.routeName);
+          },
+        ),
+        SizedBox(height: 20),
+        buildListTile(
+          'Add New Product',
+          Icons.add_circle_outline,
+          () {
+            Navigator.of(context).pushNamed(ProductFormScreen.routeName);
           },
         ),
       ],
