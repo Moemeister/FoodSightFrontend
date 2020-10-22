@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-enum PriceCategory { Affordable, Pricey, Luxurious }
+enum PriceCategory {
+  All,
+  Affordable,
+  Pricey,
+  Luxurious,
+}
 
 class Restaurant with ChangeNotifier {
   final String id;

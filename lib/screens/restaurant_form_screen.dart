@@ -1,9 +1,8 @@
-import 'package:FoodSight/screens/restaurants_screen.dart';
-
 import '../models/restaurant.dart';
 import '../providers/restaurants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RestaurantFormScreen extends StatefulWidget {
   static const routeName = '/restaurantFormScreen';
@@ -12,6 +11,7 @@ class RestaurantFormScreen extends StatefulWidget {
 }
 
 class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _emailFocusNode = FocusNode();
   final _passFocusNode = FocusNode();
   final _descFocusNode = FocusNode();
@@ -52,28 +52,36 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
   }
 
   void _udateImageUrl() {
-    if (_imageUrlFocusNode.hasFocus) {
+    if (!_imageUrlFocusNode.hasFocus) {
       setState(() {});
     }
   }
 
   void _saveForm() {
+    Fluttertoast.showToast(
+        msg: "Restaurant Saved",
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Theme.of(context).accentColor,
+        textColor: Colors.white);
     _formKey.currentState.save();
     Provider.of<Restaurants>(context, listen: false)
         .addRestaurant(_editedRestaurant);
+
     Navigator.of(context).popAndPushNamed('/');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Restaurant Form'),
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
-            onPressed: _saveForm,
-          ),
+              icon: Icon(Icons.save),
+              onPressed: () {
+                _saveForm();
+              }),
         ],
       ),
       body: Container(
@@ -246,21 +254,6 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                         ),
                       ),
                     ],
-                  ),
-                  // Add TextFormFields and ElevatedButton here.
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: FlatButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          // If the form is valid, display a Snackbar.
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('Agregando tu restaurante...')));
-                        }
-                      },
-                      child: Text('Enviar'),
-                      color: Theme.of(context).accentColor,
-                    ),
                   ),
                 ],
               ),
