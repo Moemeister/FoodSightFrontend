@@ -97,6 +97,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     onFieldSubmitted: (value) {
                       FocusScope.of(context).requestFocus(_descFocusNode);
                     },
+                    focusNode: _nameFocusNode,
                     onSaved: (value) {
                       print(value);
                       _editedProduct = Product(
@@ -153,7 +154,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     maxLines: 3,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.multiline,
-                    focusNode: _descFocusNode,
+                    focusNode: _priceFocusNode,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'El precio no puede ser vacio';
@@ -223,21 +224,6 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                         ),
                       ),
                     ],
-                  ),
-                  // Add TextFormFields and ElevatedButton here.
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: FlatButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          // If the form is valid, display a Snackbar.
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text('Agregando tu Producto...')));
-                        }
-                      },
-                      child: Text('Enviar'),
-                      color: Theme.of(context).accentColor,
-                    ),
                   ),
                 ],
               ),
