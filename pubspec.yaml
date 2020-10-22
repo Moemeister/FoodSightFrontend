@@ -35,6 +35,7 @@ dev_dependencies:
   provider: ^4.3.2+2
   intl: ^0.16.1
   fluttertoast: ^7.1.1
+  flutter_search_bar: ^2.1.0
 
 
 
