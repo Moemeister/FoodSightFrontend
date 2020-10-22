@@ -41,6 +41,14 @@ class Restaurants with ChangeNotifier {
     return [..._items];
   }
 
+  List<Restaurant> getList(PriceCategory selectedCategory) {
+    return selectedCategory == PriceCategory.All
+        ? [..._items]
+        : _items
+            .where((element) => element.priceCategory == selectedCategory)
+            .toList();
+  }
+
   Restaurant findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
