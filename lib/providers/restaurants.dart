@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../models/restaurant.dart';
 
 class Restaurants with ChangeNotifier {
@@ -54,22 +56,68 @@ class Restaurants with ChangeNotifier {
   }
 
   void addRestaurant(Restaurant restaurant) {
-    final newRestaurant = Restaurant(
-      id: DateTime.now().toString(),
-      address: restaurant.address,
-      description: restaurant.description,
-      email: restaurant.email,
-      fbUrl: restaurant.fbUrl,
-      rating: restaurant.rating,
-      instaUrl: restaurant.instaUrl,
-      location: restaurant.location,
-      name: restaurant.name,
-      password: restaurant.password,
-      phone: restaurant.phone,
-      photoUrl: restaurant.photoUrl,
-      priceCategory: restaurant.priceCategory,
-    );
-    _items.add(newRestaurant);
-    notifyListeners();
+    const url = 'https://foodsight-api.herokuapp.com/api/restaurant/create';
+    const url2 = 'http://localhost:3000/api/restaurant/create';
+
+    http
+        .post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        'name': restaurant.name,
+        'email': restaurant.email,
+        'password': restaurant.password,
+        'description': restaurant.description,
+        'phone': restaurant.phone,
+        'rating': 5,
+        'photo': restaurant.photoUrl,
+        'facebook': restaurant.fbUrl,
+        'instagram': restaurant.instaUrl
+      }),
+    )
+        .then((response) {
+      print(json.decode(response.body));
+      print(
+        json.encode({
+          'name': restaurant.name,
+          'email': restaurant.email,
+          'password': restaurant.password,
+          'description': restaurant.description,
+          'phone': restaurant.phone,
+          'rating': 5,
+          'photo': restaurant.photoUrl,
+          'facebook': restaurant.fbUrl,
+          'instagram': restaurant.instaUrl
+        }),
+      );
+      final newRestaurant = Restaurant(
+        id: DateTime.now().toString(),
+        address: restaurant.address,
+        description: restaurant.description,
+        email: restaurant.email,
+        fbUrl: restaurant.fbUrl,
+        rating: restaurant.rating,
+        instaUrl: restaurant.instaUrl,
+        location: restaurant.location,
+        name: restaurant.name,
+        password: restaurant.password,
+        phone: restaurant.phone,
+        photoUrl: restaurant.photoUrl,
+        priceCategory: restaurant.priceCategory,
+      );
+      _items.add(newRestaurant);
+      notifyListeners();
+    });
+  }
+
+  void updateRestaurant(String id, Restaurant newRestaurant) {
+    final prodIndex = _items.indexWhere((res) => res.id == id);
+
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newRestaurant;
+      notifyListeners();
+    } else {
+      print('errors.... searching products');
+    }
   }
 }

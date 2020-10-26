@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
 import '../screens/restaurant_detail.dart';
+import '../screens/restaurant_form_screen.dart';
 
 class RestaurantItem extends StatelessWidget {
   void selectedRestaurant(BuildContext ctx, String id) {
@@ -79,6 +80,18 @@ class RestaurantItem extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                                RestaurantFormScreen.routeName,
+                                arguments: singleRestaurant.id);
+                          },
+                          color: Theme.of(context).primaryColor,
                         ),
                       ],
                     ),

@@ -1,3 +1,5 @@
+import 'package:FoodSight/providers/products.dart';
+
 import '../models/restaurant.dart';
 import '../providers/restaurants.dart';
 import 'package:flutter/material.dart';
@@ -33,11 +35,53 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
     photoUrl: '',
     priceCategory: PriceCategory.Affordable,
   );
+  var _initValues = {
+    'address': 'None',
+    'description': '',
+    'email': '',
+    'fbUrl': '',
+    'rating': 10,
+    'instaUrl': '',
+    'location': '',
+    'name': '',
+    'password': '',
+    'phone': '',
+    'photoUrl': '',
+  };
+
+  var _isInit = true;
 
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_udateImageUrl);
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final producId = ModalRoute.of(context).settings.arguments as String;
+      if (producId != null) {
+        _editedRestaurant =
+            Provider.of<Restaurants>(context, listen: false).findById(producId);
+        _initValues = {
+          'address': _editedRestaurant.address,
+          'description': _editedRestaurant.description,
+          'email': _editedRestaurant.email,
+          'fbUrl': _editedRestaurant.fbUrl,
+          'instaUrl': _editedRestaurant.instaUrl,
+          'location': _editedRestaurant.location,
+          'name': _editedRestaurant.name,
+          'password': _editedRestaurant.password,
+          'phone': _editedRestaurant.phone,
+          'photoUrl': '',
+        };
+        _imageUrlController.text = _editedRestaurant.photoUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -58,16 +102,23 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
   }
 
   void _saveForm() {
-    Fluttertoast.showToast(
-        msg: "Restaurant Saved",
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Theme.of(context).accentColor,
-        textColor: Colors.white);
-    _formKey.currentState.save();
-    Provider.of<Restaurants>(context, listen: false)
-        .addRestaurant(_editedRestaurant);
+    if (_formKey.currentState.validate()) {
+      Fluttertoast.showToast(
+          msg: "Restaurant Saved",
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: Theme.of(context).accentColor,
+          textColor: Colors.white);
+      _formKey.currentState.save();
+      if (_editedRestaurant.id != null) {
+        Provider.of<Restaurants>(context, listen: false)
+            .updateRestaurant(_editedRestaurant.id, _editedRestaurant);
+      } else {
+        Provider.of<Restaurants>(context, listen: false)
+            .addRestaurant(_editedRestaurant);
+      }
 
-    Navigator.of(context).popAndPushNamed('/');
+      Navigator.of(context).popAndPushNamed('/');
+    }
   }
 
   @override
@@ -92,7 +143,9 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  //name
                   TextFormField(
+                    initialValue: _initValues['name'],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.person_add),
                       hintText: '¿Cuál es el nombre de tu restaurante?',
@@ -103,7 +156,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                     },
                     onSaved: (value) {
                       _editedRestaurant = Restaurant(
-                        id: null,
+                        id: _editedRestaurant.id,
                         address: _editedRestaurant.address,
                         description: _editedRestaurant.description,
                         email: _editedRestaurant.email,
@@ -126,7 +179,9 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                     },
                     textInputAction: TextInputAction.next,
                   ),
+                  //email
                   TextFormField(
+                    initialValue: _initValues['email'],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.email),
                       hintText: 'Inserte su email',
@@ -146,7 +201,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                     focusNode: _emailFocusNode,
                     onSaved: (value) {
                       _editedRestaurant = Restaurant(
-                        id: null,
+                        id: _editedRestaurant.id,
                         address: _editedRestaurant.address,
                         description: _editedRestaurant.description,
                         email: value,
@@ -162,7 +217,44 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                       );
                     },
                   ),
+                  //password
                   TextFormField(
+                    initialValue: _initValues['password'],
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.lock),
+                      labelText: 'Password',
+                    ),
+                    onFieldSubmitted: (value) {
+                      //FocusScope.of(context).requestFocus(_emailFocusNode);
+                    },
+                    onSaved: (value) {
+                      _editedRestaurant = Restaurant(
+                        id: _editedRestaurant.id,
+                        address: _editedRestaurant.address,
+                        description: _editedRestaurant.description,
+                        email: _editedRestaurant.email,
+                        fbUrl: _editedRestaurant.fbUrl,
+                        rating: _editedRestaurant.rating,
+                        instaUrl: _editedRestaurant.instaUrl,
+                        location: _editedRestaurant.location,
+                        name: _editedRestaurant.name,
+                        password: value,
+                        phone: _editedRestaurant.phone,
+                        photoUrl: _editedRestaurant.photoUrl,
+                        priceCategory: _editedRestaurant.priceCategory,
+                      );
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'El password no puede estar vacío';
+                      }
+                      return null;
+                    },
+                    //textInputAction: TextInputAction.next,
+                  ),
+                  //description
+                  TextFormField(
+                    initialValue: _initValues['description'],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.description),
                       hintText: 'Escriba una breve descripción del local',
@@ -180,7 +272,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                     },
                     onSaved: (value) {
                       _editedRestaurant = Restaurant(
-                        id: null,
+                        id: _editedRestaurant.id,
                         address: _editedRestaurant.address,
                         description: value,
                         email: _editedRestaurant.email,
@@ -196,6 +288,103 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                       );
                     },
                   ),
+                  //phone
+                  TextFormField(
+                    initialValue: _initValues['phone'],
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.phone),
+                      hintText: 'Agrega un teléfono para que te contacten!',
+                      labelText: 'Teléfono',
+                    ),
+                    onFieldSubmitted: (value) {
+                      //FocusScope.of(context).requestFocus(_passFocusNode);
+                    },
+                    keyboardType: TextInputType.phone,
+                    //textInputAction: TextInputAction.next,
+                    //focusNode: _emailFocusNode,
+                    onSaved: (value) {
+                      _editedRestaurant = Restaurant(
+                        id: _editedRestaurant.id,
+                        address: _editedRestaurant.address,
+                        description: _editedRestaurant.description,
+                        email: _editedRestaurant.email,
+                        fbUrl: _editedRestaurant.fbUrl,
+                        rating: _editedRestaurant.rating,
+                        instaUrl: _editedRestaurant.instaUrl,
+                        location: _editedRestaurant.location,
+                        name: _editedRestaurant.name,
+                        password: _editedRestaurant.password,
+                        phone: value,
+                        photoUrl: _editedRestaurant.photoUrl,
+                        priceCategory: _editedRestaurant.priceCategory,
+                      );
+                    },
+                  ),
+                  //Facebook
+                  TextFormField(
+                    initialValue: _initValues['fbUrl'],
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.email),
+                      hintText: 'Adjunta tu link de Facebook',
+                      labelText: 'Facebook url',
+                    ),
+                    onFieldSubmitted: (value) {
+                      //FocusScope.of(context).requestFocus(_passFocusNode);
+                    },
+                    keyboardType: TextInputType.url,
+                    textInputAction: TextInputAction.next,
+                    //focusNode: _emailFocusNode,
+                    onSaved: (value) {
+                      _editedRestaurant = Restaurant(
+                        id: _editedRestaurant.id,
+                        address: _editedRestaurant.address,
+                        description: _editedRestaurant.description,
+                        email: _editedRestaurant.email,
+                        fbUrl: value,
+                        rating: _editedRestaurant.rating,
+                        instaUrl: _editedRestaurant.instaUrl,
+                        location: _editedRestaurant.location,
+                        name: _editedRestaurant.name,
+                        password: _editedRestaurant.password,
+                        phone: _editedRestaurant.phone,
+                        photoUrl: _editedRestaurant.photoUrl,
+                        priceCategory: _editedRestaurant.priceCategory,
+                      );
+                    },
+                  ),
+                  //Instagram
+                  TextFormField(
+                    initialValue: _initValues['fbUrl'],
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.alternate_email),
+                      hintText: 'Adjunta tu link de Instagra,',
+                      labelText: 'Instagram url',
+                    ),
+                    onFieldSubmitted: (value) {
+                      //FocusScope.of(context).requestFocus(_passFocusNode);
+                    },
+                    keyboardType: TextInputType.url,
+                    textInputAction: TextInputAction.next,
+                    //focusNode: _emailFocusNode,
+                    onSaved: (value) {
+                      _editedRestaurant = Restaurant(
+                        id: _editedRestaurant.id,
+                        address: _editedRestaurant.address,
+                        description: _editedRestaurant.description,
+                        email: _editedRestaurant.email,
+                        fbUrl: _editedRestaurant.fbUrl,
+                        rating: _editedRestaurant.rating,
+                        instaUrl: value,
+                        location: _editedRestaurant.location,
+                        name: _editedRestaurant.name,
+                        password: _editedRestaurant.password,
+                        phone: _editedRestaurant.phone,
+                        photoUrl: _editedRestaurant.photoUrl,
+                        priceCategory: _editedRestaurant.priceCategory,
+                      );
+                    },
+                  ),
+                  //photo
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -236,7 +425,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                           },
                           onSaved: (value) {
                             _editedRestaurant = Restaurant(
-                              id: null,
+                              id: _editedRestaurant.id,
                               address: _editedRestaurant.address,
                               description: _editedRestaurant.description,
                               email: _editedRestaurant.email,
