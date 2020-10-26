@@ -11,11 +11,11 @@ class Product with ChangeNotifier {
 
   Product({
     this.id,
-    this.idRestaurant,
     this.name,
     this.description,
     this.price,
     this.imageUrl,
     this.rating,
+    this.idRestaurant,
   });
 }

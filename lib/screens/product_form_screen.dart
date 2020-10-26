@@ -26,12 +26,44 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     rating: 0.0,
     imageUrl: '',
     price: 0.0,
+    idRestaurant: 'r2',
   );
+
+  var _initValues = {
+    'name': '',
+    'description': '',
+    'rating': '',
+    'price': '',
+    'imageUrl': '',
+    'idRestaurant': 'r2'
+  };
+  var _isInit = true;
 
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_udateImageUrl);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      if (productId != null) {
+        _editedProduct =
+            Provider.of<Products>(context, listen: false).findById(productId);
+        _initValues = {
+          'name': _editedProduct.name,
+          'description': _editedProduct.description,
+          'rating': _editedProduct.rating.toString(),
+          'price': _editedProduct.price.toString(),
+          'imageUrl': '',
+        };
+        _imageUrlController.text = _editedProduct.imageUrl;
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -52,16 +84,21 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void _saveForm() {
-    Fluttertoast.showToast(
-        msg: "Product Saved",
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: Theme.of(context).accentColor,
-        textColor: Colors.white);
     if (_formKey.currentState.validate()) {
+      Fluttertoast.showToast(
+          msg: "Product Saved",
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: Theme.of(context).accentColor,
+          textColor: Colors.white);
       _formKey.currentState.save();
+      if (_editedProduct.id != null) {
+        Provider.of<Products>(context, listen: false)
+            .updateProduct(_editedProduct.id, _editedProduct);
+      } else {
+        Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      }
     }
-
-    Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
 
     Navigator.of(context).popAndPushNamed('/');
   }
@@ -88,6 +125,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    initialValue: _initValues['name'],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.person_add),
                       hintText: '¿Cuál es el nombre del platillo?',
@@ -100,12 +138,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     onSaved: (value) {
                       print(value);
                       _editedProduct = Product(
-                          id: null,
+                          id: _editedProduct.id,
                           name: value,
                           description: _editedProduct.description,
                           price: _editedProduct.price,
                           rating: _editedProduct.rating,
-                          imageUrl: _editedProduct.imageUrl);
+                          imageUrl: _editedProduct.imageUrl,
+                          idRestaurant: _editedProduct.idRestaurant);
                     },
                     validator: (value) {
                       if (value.isEmpty) {
@@ -116,6 +155,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     textInputAction: TextInputAction.next,
                   ),
                   TextFormField(
+                    initialValue: _initValues['description'],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.description),
                       hintText: 'Escriba una breve descripción del platillo',
@@ -136,15 +176,17 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     },
                     onSaved: (value) {
                       _editedProduct = Product(
-                          id: null,
+                          id: _editedProduct.id,
                           name: _editedProduct.name,
                           description: value,
                           price: _editedProduct.price,
                           rating: _editedProduct.rating,
-                          imageUrl: _editedProduct.imageUrl);
+                          imageUrl: _editedProduct.imageUrl,
+                          idRestaurant: _editedProduct.idRestaurant);
                     },
                   ),
                   TextFormField(
+                    initialValue: _initValues['price'],
                     decoration: const InputDecoration(
                       icon: Icon(Icons.description),
                       hintText: 'Escriba el precio del platillo',
@@ -165,12 +207,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     },
                     onSaved: (value) {
                       _editedProduct = Product(
-                          id: null,
+                          id: _editedProduct.id,
                           name: _editedProduct.name,
                           description: _editedProduct.description,
                           price: double.parse(value),
                           rating: _editedProduct.rating,
-                          imageUrl: _editedProduct.imageUrl);
+                          imageUrl: _editedProduct.imageUrl,
+                          idRestaurant: _editedProduct.idRestaurant);
                     },
                   ),
                   Row(
@@ -213,12 +256,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           },
                           onSaved: (value) {
                             _editedProduct = Product(
-                                id: null,
+                                id: _editedProduct.id,
                                 name: _editedProduct.name,
                                 description: _editedProduct.description,
                                 price: _editedProduct.price,
                                 rating: _editedProduct.rating,
-                                imageUrl: value);
+                                imageUrl: value,
+                                idRestaurant: _editedProduct.idRestaurant);
                           },
                         ),
                       ),

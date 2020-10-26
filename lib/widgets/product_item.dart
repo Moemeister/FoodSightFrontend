@@ -1,3 +1,4 @@
+import 'package:FoodSight/screens/product_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
@@ -63,7 +64,16 @@ class ProductItem extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Icons.attach_money),
-                        Text("${singleProduct.price}")
+                        Text("${singleProduct.price}"),
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                                ProductFormScreen.routeName,
+                                arguments: singleProduct.id);
+                          },
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ],
                     )
                   ],
