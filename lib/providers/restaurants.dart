@@ -76,22 +76,10 @@ class Restaurants with ChangeNotifier {
       }),
     )
         .then((response) {
-      print(json.decode(response.body));
-      print(
-        json.encode({
-          'name': restaurant.name,
-          'email': restaurant.email,
-          'password': restaurant.password,
-          'description': restaurant.description,
-          'phone': restaurant.phone,
-          'rating': 5,
-          'photo': restaurant.photoUrl,
-          'facebook': restaurant.fbUrl,
-          'instagram': restaurant.instaUrl
-        }),
-      );
+      print(json.decode(response.body)['id']);
+
       final newRestaurant = Restaurant(
-        id: DateTime.now().toString(),
+        id: json.decode(response.body)['id'],
         address: restaurant.address,
         description: restaurant.description,
         email: restaurant.email,
