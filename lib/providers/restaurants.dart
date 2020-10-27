@@ -55,11 +55,9 @@ class Restaurants with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addRestaurant(Restaurant restaurant) {
+  Future<void> addRestaurant(Restaurant restaurant) {
     const url = 'https://foodsight-api.herokuapp.com/api/restaurant/create';
-    const url2 = 'http://localhost:3000/api/restaurant/create';
-
-    http
+    return http
         .post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -95,6 +93,9 @@ class Restaurants with ChangeNotifier {
       );
       _items.add(newRestaurant);
       notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
     });
   }
 

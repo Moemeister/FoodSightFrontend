@@ -50,6 +50,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
   };
 
   var _isInit = true;
+  var _isloading = false;
 
   @override
   void initState() {
@@ -109,15 +110,41 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
           backgroundColor: Theme.of(context).accentColor,
           textColor: Colors.white);
       _formKey.currentState.save();
+      setState(() {
+        _isloading = true;
+      });
       if (_editedRestaurant.id != null) {
         Provider.of<Restaurants>(context, listen: false)
             .updateRestaurant(_editedRestaurant.id, _editedRestaurant);
+        setState(() {
+          _isloading = false;
+        });
       } else {
         Provider.of<Restaurants>(context, listen: false)
-            .addRestaurant(_editedRestaurant);
+            .addRestaurant(_editedRestaurant)
+            .catchError((error) {
+          return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('An error ocurred'),
+              content: Text('Something when wrong'),
+              actions: [
+                FlatButton(
+                  child: Text('Okaay'),
+                  onPressed: () {
+                    Navigator.of(context).popAndPushNamed('/');
+                  },
+                )
+              ],
+            ),
+          );
+        }).then((_) {
+          setState(() {
+            _isloading = false;
+          });
+          Navigator.of(context).popAndPushNamed('/');
+        });
       }
-
-      Navigator.of(context).popAndPushNamed('/');
     }
   }
 
@@ -135,293 +162,102 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
               }),
         ],
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  //name
-                  TextFormField(
-                    initialValue: _initValues['name'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.person_add),
-                      hintText: '¿Cuál es el nombre de tu restaurante?',
-                      labelText: 'Nombre',
-                    ),
-                    onFieldSubmitted: (value) {
-                      FocusScope.of(context).requestFocus(_emailFocusNode);
-                    },
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: _editedRestaurant.description,
-                        email: _editedRestaurant.email,
-                        fbUrl: _editedRestaurant.fbUrl,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: _editedRestaurant.instaUrl,
-                        location: _editedRestaurant.location,
-                        name: value,
-                        password: _editedRestaurant.password,
-                        phone: _editedRestaurant.phone,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'El nombre no puede ser vacío';
-                      }
-                      return null;
-                    },
-                    textInputAction: TextInputAction.next,
-                  ),
-                  //email
-                  TextFormField(
-                    initialValue: _initValues['email'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.email),
-                      hintText: 'Inserte su email',
-                      labelText: 'Email',
-                    ),
-                    onFieldSubmitted: (value) {
-                      FocusScope.of(context).requestFocus(_passFocusNode);
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'El email no puede ser vacío';
-                      }
-                      return null;
-                    },
-                    focusNode: _emailFocusNode,
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: _editedRestaurant.description,
-                        email: value,
-                        fbUrl: _editedRestaurant.fbUrl,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: _editedRestaurant.instaUrl,
-                        location: _editedRestaurant.location,
-                        name: _editedRestaurant.name,
-                        password: _editedRestaurant.password,
-                        phone: _editedRestaurant.phone,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                  ),
-                  //password
-                  TextFormField(
-                    initialValue: _initValues['password'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
-                    ),
-                    onFieldSubmitted: (value) {
-                      //FocusScope.of(context).requestFocus(_emailFocusNode);
-                    },
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: _editedRestaurant.description,
-                        email: _editedRestaurant.email,
-                        fbUrl: _editedRestaurant.fbUrl,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: _editedRestaurant.instaUrl,
-                        location: _editedRestaurant.location,
-                        name: _editedRestaurant.name,
-                        password: value,
-                        phone: _editedRestaurant.phone,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'El password no puede estar vacío';
-                      }
-                      return null;
-                    },
-                    //textInputAction: TextInputAction.next,
-                  ),
-                  //description
-                  TextFormField(
-                    initialValue: _initValues['description'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.description),
-                      hintText: 'Escriba una breve descripción del local',
-                      labelText: 'Descripción',
-                    ),
-                    maxLines: 3,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.multiline,
-                    focusNode: _descFocusNode,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'La descripción no puede ser vacía';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: value,
-                        email: _editedRestaurant.email,
-                        fbUrl: _editedRestaurant.fbUrl,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: _editedRestaurant.instaUrl,
-                        location: _editedRestaurant.location,
-                        name: _editedRestaurant.name,
-                        password: _editedRestaurant.password,
-                        phone: _editedRestaurant.phone,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                  ),
-                  //phone
-                  TextFormField(
-                    initialValue: _initValues['phone'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.phone),
-                      hintText: 'Agrega un teléfono para que te contacten!',
-                      labelText: 'Teléfono',
-                    ),
-                    onFieldSubmitted: (value) {
-                      //FocusScope.of(context).requestFocus(_passFocusNode);
-                    },
-                    keyboardType: TextInputType.phone,
-                    //textInputAction: TextInputAction.next,
-                    //focusNode: _emailFocusNode,
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: _editedRestaurant.description,
-                        email: _editedRestaurant.email,
-                        fbUrl: _editedRestaurant.fbUrl,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: _editedRestaurant.instaUrl,
-                        location: _editedRestaurant.location,
-                        name: _editedRestaurant.name,
-                        password: _editedRestaurant.password,
-                        phone: value,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                  ),
-                  //Facebook
-                  TextFormField(
-                    initialValue: _initValues['fbUrl'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.email),
-                      hintText: 'Adjunta tu link de Facebook',
-                      labelText: 'Facebook url',
-                    ),
-                    onFieldSubmitted: (value) {
-                      //FocusScope.of(context).requestFocus(_passFocusNode);
-                    },
-                    keyboardType: TextInputType.url,
-                    textInputAction: TextInputAction.next,
-                    //focusNode: _emailFocusNode,
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: _editedRestaurant.description,
-                        email: _editedRestaurant.email,
-                        fbUrl: value,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: _editedRestaurant.instaUrl,
-                        location: _editedRestaurant.location,
-                        name: _editedRestaurant.name,
-                        password: _editedRestaurant.password,
-                        phone: _editedRestaurant.phone,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                  ),
-                  //Instagram
-                  TextFormField(
-                    initialValue: _initValues['fbUrl'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.alternate_email),
-                      hintText: 'Adjunta tu link de Instagra,',
-                      labelText: 'Instagram url',
-                    ),
-                    onFieldSubmitted: (value) {
-                      //FocusScope.of(context).requestFocus(_passFocusNode);
-                    },
-                    keyboardType: TextInputType.url,
-                    textInputAction: TextInputAction.next,
-                    //focusNode: _emailFocusNode,
-                    onSaved: (value) {
-                      _editedRestaurant = Restaurant(
-                        id: _editedRestaurant.id,
-                        address: _editedRestaurant.address,
-                        description: _editedRestaurant.description,
-                        email: _editedRestaurant.email,
-                        fbUrl: _editedRestaurant.fbUrl,
-                        rating: _editedRestaurant.rating,
-                        instaUrl: value,
-                        location: _editedRestaurant.location,
-                        name: _editedRestaurant.name,
-                        password: _editedRestaurant.password,
-                        phone: _editedRestaurant.phone,
-                        photoUrl: _editedRestaurant.photoUrl,
-                        priceCategory: _editedRestaurant.priceCategory,
-                      );
-                    },
-                  ),
-                  //photo
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        margin: EdgeInsets.only(
-                          top: 8,
-                          right: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        child: _imageUrlController.text.isEmpty
-                            ? Text('Enter URL')
-                            : FittedBox(
-                                child: Image.network(
-                                  _imageUrlController.text,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                      ),
-                      Expanded(
-                        child: TextFormField(
+      body: _isloading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        //name
+                        TextFormField(
+                          initialValue: _initValues['name'],
                           decoration: const InputDecoration(
-                            icon: Icon(Icons.camera_alt),
-                            labelText: 'Image Url',
+                            icon: Icon(Icons.person_add),
+                            hintText: '¿Cuál es el nombre de tu restaurante?',
+                            labelText: 'Nombre',
                           ),
-                          keyboardType: TextInputType.url,
-                          textInputAction: TextInputAction.done,
-                          controller: _imageUrlController,
-                          focusNode: _imageUrlFocusNode,
-                          onFieldSubmitted: (_) {
-                            _saveForm();
+                          onFieldSubmitted: (value) {
+                            FocusScope.of(context)
+                                .requestFocus(_emailFocusNode);
+                          },
+                          onSaved: (value) {
+                            _editedRestaurant = Restaurant(
+                              id: _editedRestaurant.id,
+                              address: _editedRestaurant.address,
+                              description: _editedRestaurant.description,
+                              email: _editedRestaurant.email,
+                              fbUrl: _editedRestaurant.fbUrl,
+                              rating: _editedRestaurant.rating,
+                              instaUrl: _editedRestaurant.instaUrl,
+                              location: _editedRestaurant.location,
+                              name: value,
+                              password: _editedRestaurant.password,
+                              phone: _editedRestaurant.phone,
+                              photoUrl: _editedRestaurant.photoUrl,
+                              priceCategory: _editedRestaurant.priceCategory,
+                            );
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'El nombre no puede ser vacío';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                        ),
+                        //email
+                        TextFormField(
+                          initialValue: _initValues['email'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.email),
+                            hintText: 'Inserte su email',
+                            labelText: 'Email',
+                          ),
+                          onFieldSubmitted: (value) {
+                            FocusScope.of(context).requestFocus(_passFocusNode);
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'El email no puede ser vacío';
+                            }
+                            return null;
+                          },
+                          focusNode: _emailFocusNode,
+                          onSaved: (value) {
+                            _editedRestaurant = Restaurant(
+                              id: _editedRestaurant.id,
+                              address: _editedRestaurant.address,
+                              description: _editedRestaurant.description,
+                              email: value,
+                              fbUrl: _editedRestaurant.fbUrl,
+                              rating: _editedRestaurant.rating,
+                              instaUrl: _editedRestaurant.instaUrl,
+                              location: _editedRestaurant.location,
+                              name: _editedRestaurant.name,
+                              password: _editedRestaurant.password,
+                              phone: _editedRestaurant.phone,
+                              photoUrl: _editedRestaurant.photoUrl,
+                              priceCategory: _editedRestaurant.priceCategory,
+                            );
+                          },
+                        ),
+                        //password
+                        TextFormField(
+                          initialValue: _initValues['password'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.lock),
+                            labelText: 'Password',
+                          ),
+                          onFieldSubmitted: (value) {
+                            //FocusScope.of(context).requestFocus(_emailFocusNode);
                           },
                           onSaved: (value) {
                             _editedRestaurant = Restaurant(
@@ -434,22 +270,220 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                               instaUrl: _editedRestaurant.instaUrl,
                               location: _editedRestaurant.location,
                               name: _editedRestaurant.name,
+                              password: value,
+                              phone: _editedRestaurant.phone,
+                              photoUrl: _editedRestaurant.photoUrl,
+                              priceCategory: _editedRestaurant.priceCategory,
+                            );
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'El password no puede estar vacío';
+                            }
+                            return null;
+                          },
+                          //textInputAction: TextInputAction.next,
+                        ),
+                        //description
+                        TextFormField(
+                          initialValue: _initValues['description'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.description),
+                            hintText: 'Escriba una breve descripción del local',
+                            labelText: 'Descripción',
+                          ),
+                          maxLines: 3,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.multiline,
+                          focusNode: _descFocusNode,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'La descripción no puede ser vacía';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _editedRestaurant = Restaurant(
+                              id: _editedRestaurant.id,
+                              address: _editedRestaurant.address,
+                              description: value,
+                              email: _editedRestaurant.email,
+                              fbUrl: _editedRestaurant.fbUrl,
+                              rating: _editedRestaurant.rating,
+                              instaUrl: _editedRestaurant.instaUrl,
+                              location: _editedRestaurant.location,
+                              name: _editedRestaurant.name,
                               password: _editedRestaurant.password,
                               phone: _editedRestaurant.phone,
-                              photoUrl: value,
+                              photoUrl: _editedRestaurant.photoUrl,
                               priceCategory: _editedRestaurant.priceCategory,
                             );
                           },
                         ),
-                      ),
-                    ],
+                        //phone
+                        TextFormField(
+                          initialValue: _initValues['phone'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.phone),
+                            hintText:
+                                'Agrega un teléfono para que te contacten!',
+                            labelText: 'Teléfono',
+                          ),
+                          onFieldSubmitted: (value) {
+                            //FocusScope.of(context).requestFocus(_passFocusNode);
+                          },
+                          keyboardType: TextInputType.phone,
+                          //textInputAction: TextInputAction.next,
+                          //focusNode: _emailFocusNode,
+                          onSaved: (value) {
+                            _editedRestaurant = Restaurant(
+                              id: _editedRestaurant.id,
+                              address: _editedRestaurant.address,
+                              description: _editedRestaurant.description,
+                              email: _editedRestaurant.email,
+                              fbUrl: _editedRestaurant.fbUrl,
+                              rating: _editedRestaurant.rating,
+                              instaUrl: _editedRestaurant.instaUrl,
+                              location: _editedRestaurant.location,
+                              name: _editedRestaurant.name,
+                              password: _editedRestaurant.password,
+                              phone: value,
+                              photoUrl: _editedRestaurant.photoUrl,
+                              priceCategory: _editedRestaurant.priceCategory,
+                            );
+                          },
+                        ),
+                        //Facebook
+                        TextFormField(
+                          initialValue: _initValues['fbUrl'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.email),
+                            hintText: 'Adjunta tu link de Facebook',
+                            labelText: 'Facebook url',
+                          ),
+                          onFieldSubmitted: (value) {
+                            //FocusScope.of(context).requestFocus(_passFocusNode);
+                          },
+                          keyboardType: TextInputType.url,
+                          textInputAction: TextInputAction.next,
+                          //focusNode: _emailFocusNode,
+                          onSaved: (value) {
+                            _editedRestaurant = Restaurant(
+                              id: _editedRestaurant.id,
+                              address: _editedRestaurant.address,
+                              description: _editedRestaurant.description,
+                              email: _editedRestaurant.email,
+                              fbUrl: value,
+                              rating: _editedRestaurant.rating,
+                              instaUrl: _editedRestaurant.instaUrl,
+                              location: _editedRestaurant.location,
+                              name: _editedRestaurant.name,
+                              password: _editedRestaurant.password,
+                              phone: _editedRestaurant.phone,
+                              photoUrl: _editedRestaurant.photoUrl,
+                              priceCategory: _editedRestaurant.priceCategory,
+                            );
+                          },
+                        ),
+                        //Instagram
+                        TextFormField(
+                          initialValue: _initValues['fbUrl'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.alternate_email),
+                            hintText: 'Adjunta tu link de Instagra,',
+                            labelText: 'Instagram url',
+                          ),
+                          onFieldSubmitted: (value) {
+                            //FocusScope.of(context).requestFocus(_passFocusNode);
+                          },
+                          keyboardType: TextInputType.url,
+                          textInputAction: TextInputAction.next,
+                          //focusNode: _emailFocusNode,
+                          onSaved: (value) {
+                            _editedRestaurant = Restaurant(
+                              id: _editedRestaurant.id,
+                              address: _editedRestaurant.address,
+                              description: _editedRestaurant.description,
+                              email: _editedRestaurant.email,
+                              fbUrl: _editedRestaurant.fbUrl,
+                              rating: _editedRestaurant.rating,
+                              instaUrl: value,
+                              location: _editedRestaurant.location,
+                              name: _editedRestaurant.name,
+                              password: _editedRestaurant.password,
+                              phone: _editedRestaurant.phone,
+                              photoUrl: _editedRestaurant.photoUrl,
+                              priceCategory: _editedRestaurant.priceCategory,
+                            );
+                          },
+                        ),
+                        //photo
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              margin: EdgeInsets.only(
+                                top: 8,
+                                right: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              child: _imageUrlController.text.isEmpty
+                                  ? Text('Enter URL')
+                                  : FittedBox(
+                                      child: Image.network(
+                                        _imageUrlController.text,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  icon: Icon(Icons.camera_alt),
+                                  labelText: 'Image Url',
+                                ),
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.done,
+                                controller: _imageUrlController,
+                                focusNode: _imageUrlFocusNode,
+                                onFieldSubmitted: (_) {
+                                  _saveForm();
+                                },
+                                onSaved: (value) {
+                                  _editedRestaurant = Restaurant(
+                                    id: _editedRestaurant.id,
+                                    address: _editedRestaurant.address,
+                                    description: _editedRestaurant.description,
+                                    email: _editedRestaurant.email,
+                                    fbUrl: _editedRestaurant.fbUrl,
+                                    rating: _editedRestaurant.rating,
+                                    instaUrl: _editedRestaurant.instaUrl,
+                                    location: _editedRestaurant.location,
+                                    name: _editedRestaurant.name,
+                                    password: _editedRestaurant.password,
+                                    phone: _editedRestaurant.phone,
+                                    photoUrl: value,
+                                    priceCategory:
+                                        _editedRestaurant.priceCategory,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
