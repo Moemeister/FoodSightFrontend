@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -71,17 +73,42 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product product) {
-    final newProduct = Product(
-        id: product.id,
-        idRestaurant: product.idRestaurant,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl,
-        rating: product.rating);
+    const urlHeroku = 'https://foodsight-api.herokuapp.com/api/product/create';
 
-    _items.add(newProduct);
-    notifyListeners();
+    http
+        .post(
+      urlHeroku,
+      headers: {
+        "Content-Type": "application/json",
+        "_id": "5f972850e5f83c001786715c",
+      },
+      body: json.encode({
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'imageUrl': product.imageUrl,
+        'rating': product.rating,
+      }),
+    )
+        .then((response) {
+      print(json.decode(response.body)['id']);
+
+      //)
+      //   .then((response) {
+      // print(json.decode(response.body)['id']);
+
+      final newProduct = Product(
+          id: json.decode(response.body)['id'],
+          idRestaurant: product.idRestaurant,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.imageUrl,
+          rating: product.rating);
+
+      _items.add(newProduct);
+      notifyListeners();
+    });
   }
 
   void updateProduct(String id, Product newProduct) {
