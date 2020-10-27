@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 class Products with ChangeNotifier {
   List<Product> _items = [
     Product(
@@ -34,6 +37,28 @@ class Products with ChangeNotifier {
       rating: 4.3,
     ),
   ];
+
+  /*List<Product> _items = [];
+  Future<void> fetchProduct() async {
+    final response = await http
+        .get('https://foodsight-api.herokuapp.com/api/guestAllProducts');
+    if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      bool flag = true;
+      extractedData.forEach((key, value) {
+        if (flag) {
+          List insideVal = value as List;
+          for (int i = 0; i < insideVal.length; i++) {
+            _items.add(Product.fromJson(value[i]));
+          }
+          flag = false;
+        }
+      });
+      notifyListeners();
+    } else {
+      throw Exception('Failed to load Products');
+    }
+  }*/
 
   List<Product> get items {
     return [..._items];

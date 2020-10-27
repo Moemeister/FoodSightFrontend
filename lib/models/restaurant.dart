@@ -8,19 +8,19 @@ enum PriceCategory {
 }
 
 class Restaurant with ChangeNotifier {
-  final String id;
-  final String name;
-  final String email;
-  final String password;
-  final String photoUrl;
-  final String location;
-  final String description;
-  final String phone;
-  final String address;
-  final String fbUrl;
-  final String instaUrl;
-  final double rating;
-  final PriceCategory priceCategory;
+  String id;
+  String name;
+  String email;
+  String password;
+  String photoUrl;
+  String location;
+  String description;
+  String phone;
+  String address;
+  String fbUrl;
+  String instaUrl;
+  double rating;
+  PriceCategory priceCategory;
 
   Restaurant(
       {this.id,
@@ -36,6 +36,19 @@ class Restaurant with ChangeNotifier {
       this.instaUrl,
       this.rating,
       this.priceCategory});
+
+  Restaurant.fromJson(Map<String, dynamic> json) {
+    id = json['_id'];
+    name = json['name'];
+    email = json['email'];
+    password = json['hashedPassword'];
+    description = json['description'];
+    phone = json['phone'];
+    //rating = json['rating'] as double;
+    photoUrl = json['photo'];
+    fbUrl = json['facebook'];
+    instaUrl = json['instagram'];
+  }
 
   String get priceRange {
     switch (priceCategory) {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier {
-  final String id;
-  final String idRestaurant;
-  final String name;
-  final String description;
-  final double price;
-  final String imageUrl;
-  final double rating;
+  String id;
+  String idRestaurant;
+  String name;
+  String description;
+  double price;
+  String imageUrl;
+  double rating;
 
   Product({
     this.id,
@@ -18,4 +18,13 @@ class Product with ChangeNotifier {
     this.rating,
     this.idRestaurant,
   });
+
+  Product.fromJson(Map<String, dynamic> json) {
+    id = json['_id'];
+    name = json['name'];
+    description = json['description'];
+    //price = json['price'];
+    imageUrl = json['image'];
+    idRestaurant = json['restaurant'];
+  }
 }
