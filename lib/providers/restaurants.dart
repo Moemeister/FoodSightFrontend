@@ -112,7 +112,6 @@ class Restaurants with ChangeNotifier {
         password: restaurant.password,
         phone: restaurant.phone,
         photoUrl: restaurant.photoUrl,
-        priceCategory: restaurant.priceCategory,
       );
       _items.add(newRestaurant);
       notifyListeners();

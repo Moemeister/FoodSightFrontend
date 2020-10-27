@@ -72,14 +72,15 @@ class Products with ChangeNotifier {
     return _items.where((element) => element.idRestaurant == resId).toList();
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     const urlHeroku = 'https://foodsight-api.herokuapp.com/api/product/create';
 
-    http
+    print(product.imageUrl.toString() + "putisima madre");
+    return http
         .post(
       urlHeroku,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         "_id": "5f972850e5f83c001786715c",
       },
       body: json.encode({
@@ -91,14 +92,9 @@ class Products with ChangeNotifier {
       }),
     )
         .then((response) {
-      print(json.decode(response.body)['id']);
-
-      //)
-      //   .then((response) {
-      // print(json.decode(response.body)['id']);
-
+      
       final newProduct = Product(
-          id: json.decode(response.body)['id'],
+          //id: json.decode(response.body)['id'],
           idRestaurant: product.idRestaurant,
           name: product.name,
           description: product.description,
