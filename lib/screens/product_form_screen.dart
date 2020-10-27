@@ -38,6 +38,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     'idRestaurant': 'r2'
   };
   var _isInit = true;
+  var _isloading = false;
 
   @override
   void initState() {
@@ -91,16 +92,26 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           backgroundColor: Theme.of(context).accentColor,
           textColor: Colors.white);
       _formKey.currentState.save();
+      setState(() {
+        _isloading = true;
+      });
       if (_editedProduct.id != null) {
         Provider.of<Products>(context, listen: false)
             .updateProduct(_editedProduct.id, _editedProduct);
+        Navigator.of(context).popAndPushNamed('/');
       } else {
         Provider.of<Products>(context, listen: false)
-            .addProduct(_editedProduct);
+            .addProduct(_editedProduct)
+            .then((_) {
+          setState(() {
+            _isloading = false;
+          });
+          Navigator.of(context).popAndPushNamed('/');
+        });
       }
     }
 
-    Navigator.of(context).popAndPushNamed('/');
+    //Navigator.of(context).popAndPushNamed('/');
   }
 
   @override
@@ -116,164 +127,172 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           ),
         ],
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    initialValue: _initValues['name'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.person_add),
-                      hintText: '¿Cuál es el nombre del platillo?',
-                      labelText: 'Platillo',
-                    ),
-                    onFieldSubmitted: (value) {
-                      FocusScope.of(context).requestFocus(_descFocusNode);
-                    },
-                    focusNode: _nameFocusNode,
-                    onSaved: (value) {
-                      print(value);
-                      _editedProduct = Product(
-                          id: _editedProduct.id,
-                          name: value,
-                          description: _editedProduct.description,
-                          price: _editedProduct.price,
-                          rating: _editedProduct.rating,
-                          imageUrl: _editedProduct.imageUrl,
-                          idRestaurant: _editedProduct.idRestaurant);
-                    },
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'El nombre no puede ser vacío';
-                      }
-                      return null;
-                    },
-                    textInputAction: TextInputAction.next,
-                  ),
-                  TextFormField(
-                    initialValue: _initValues['description'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.description),
-                      hintText: 'Escriba una breve descripción del platillo',
-                      labelText: 'Descripción',
-                    ),
-                    maxLines: 3,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.multiline,
-                    focusNode: _descFocusNode,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'La descripción no puede ser vacía';
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (value) {
-                      FocusScope.of(context).requestFocus(_priceFocusNode);
-                    },
-                    onSaved: (value) {
-                      _editedProduct = Product(
-                          id: _editedProduct.id,
-                          name: _editedProduct.name,
-                          description: value,
-                          price: _editedProduct.price,
-                          rating: _editedProduct.rating,
-                          imageUrl: _editedProduct.imageUrl,
-                          idRestaurant: _editedProduct.idRestaurant);
-                    },
-                  ),
-                  TextFormField(
-                    initialValue: _initValues['price'],
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.description),
-                      hintText: 'Escriba el precio del platillo',
-                      labelText: 'Precio',
-                    ),
-                    maxLines: 3,
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.multiline,
-                    focusNode: _priceFocusNode,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'El precio no puede ser vacio';
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (value) {
-                      FocusScope.of(context).requestFocus(_imageUrlFocusNode);
-                    },
-                    onSaved: (value) {
-                      _editedProduct = Product(
-                          id: _editedProduct.id,
-                          name: _editedProduct.name,
-                          description: _editedProduct.description,
-                          price: double.parse(value),
-                          rating: _editedProduct.rating,
-                          imageUrl: _editedProduct.imageUrl,
-                          idRestaurant: _editedProduct.idRestaurant);
-                    },
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        margin: EdgeInsets.only(
-                          top: 8,
-                          right: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        child: _imageUrlController.text.isEmpty
-                            ? Text('Enter URL')
-                            : FittedBox(
-                                child: Image.network(
-                                  _imageUrlController.text,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                      ),
-                      Expanded(
-                        child: TextFormField(
+      body: _isloading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          initialValue: _initValues['name'],
                           decoration: const InputDecoration(
-                            icon: Icon(Icons.camera_alt),
-                            labelText: 'Image Url',
+                            icon: Icon(Icons.person_add),
+                            hintText: '¿Cuál es el nombre del platillo?',
+                            labelText: 'Platillo',
                           ),
-                          keyboardType: TextInputType.url,
-                          textInputAction: TextInputAction.done,
-                          controller: _imageUrlController,
-                          focusNode: _imageUrlFocusNode,
-                          onFieldSubmitted: (_) {
-                            _saveForm();
+                          onFieldSubmitted: (value) {
+                            FocusScope.of(context).requestFocus(_descFocusNode);
+                          },
+                          focusNode: _nameFocusNode,
+                          onSaved: (value) {
+                            print(value);
+                            _editedProduct = Product(
+                                id: _editedProduct.id,
+                                name: value,
+                                description: _editedProduct.description,
+                                price: _editedProduct.price,
+                                rating: _editedProduct.rating,
+                                imageUrl: _editedProduct.imageUrl,
+                                idRestaurant: _editedProduct.idRestaurant);
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'El nombre no puede ser vacío';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                        ),
+                        TextFormField(
+                          initialValue: _initValues['description'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.description),
+                            hintText:
+                                'Escriba una breve descripción del platillo',
+                            labelText: 'Descripción',
+                          ),
+                          maxLines: 3,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.multiline,
+                          focusNode: _descFocusNode,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'La descripción no puede ser vacía';
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (value) {
+                            FocusScope.of(context)
+                                .requestFocus(_priceFocusNode);
+                          },
+                          onSaved: (value) {
+                            _editedProduct = Product(
+                                id: _editedProduct.id,
+                                name: _editedProduct.name,
+                                description: value,
+                                price: _editedProduct.price,
+                                rating: _editedProduct.rating,
+                                imageUrl: _editedProduct.imageUrl,
+                                idRestaurant: _editedProduct.idRestaurant);
+                          },
+                        ),
+                        TextFormField(
+                          initialValue: _initValues['price'],
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.description),
+                            hintText: 'Escriba el precio del platillo',
+                            labelText: 'Precio',
+                          ),
+                          maxLines: 3,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.multiline,
+                          focusNode: _priceFocusNode,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'El precio no puede ser vacio';
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (value) {
+                            FocusScope.of(context)
+                                .requestFocus(_imageUrlFocusNode);
                           },
                           onSaved: (value) {
                             _editedProduct = Product(
                                 id: _editedProduct.id,
                                 name: _editedProduct.name,
                                 description: _editedProduct.description,
-                                price: _editedProduct.price,
+                                price: double.parse(value),
                                 rating: _editedProduct.rating,
-                                imageUrl: value,
+                                imageUrl: _editedProduct.imageUrl,
                                 idRestaurant: _editedProduct.idRestaurant);
                           },
                         ),
-                      ),
-                    ],
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              margin: EdgeInsets.only(
+                                top: 8,
+                                right: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              child: _imageUrlController.text.isEmpty
+                                  ? Text('Enter URL')
+                                  : FittedBox(
+                                      child: Image.network(
+                                        _imageUrlController.text,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  icon: Icon(Icons.camera_alt),
+                                  labelText: 'Image Url',
+                                ),
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.done,
+                                controller: _imageUrlController,
+                                focusNode: _imageUrlFocusNode,
+                                onFieldSubmitted: (_) {
+                                  _saveForm();
+                                },
+                                onSaved: (value) {
+                                  _editedProduct = Product(
+                                      id: _editedProduct.id,
+                                      name: _editedProduct.name,
+                                      description: _editedProduct.description,
+                                      price: _editedProduct.price,
+                                      rating: _editedProduct.rating,
+                                      imageUrl: value,
+                                      idRestaurant:
+                                          _editedProduct.idRestaurant);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

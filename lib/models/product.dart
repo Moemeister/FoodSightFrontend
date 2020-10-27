@@ -23,7 +23,7 @@ class Product with ChangeNotifier {
     id = json['_id'];
     name = json['name'];
     description = json['description'];
-    //price = json['price'];
+    price = json['price'] + .0;
     imageUrl = json['image'];
     idRestaurant = json['restaurant'];
   }

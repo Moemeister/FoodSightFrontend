@@ -72,10 +72,10 @@ class Products with ChangeNotifier {
     return _items.where((element) => element.idRestaurant == resId).toList();
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     const urlHeroku = 'https://foodsight-api.herokuapp.com/api/product/create';
 
-    http
+    return http
         .post(
       urlHeroku,
       headers: {
