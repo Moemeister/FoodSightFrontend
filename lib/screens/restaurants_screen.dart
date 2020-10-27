@@ -5,6 +5,9 @@ import '../widgets/restaurant_grid.dart';
 import '../widgets/drawer.dart';
 
 import '../models/restaurant.dart';
+import '../providers/restaurants.dart';
+import '../providers/products.dart';
+import 'package:provider/provider.dart';
 
 class RestaurantsScreen extends StatefulWidget {
   @override
@@ -74,6 +77,23 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   }
 
   PriceCategory _selectedPriceCategory = PriceCategory.All;
+
+  var _isInit = true;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      //Provider.of<Restaurants>(context).fetchRestaurant();
+      //Provider.of<Products>(context).fetchProduct();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

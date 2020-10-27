@@ -1,6 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'dart:convert';
 import '../models/restaurant.dart';
 
 class Restaurants with ChangeNotifier {
@@ -38,6 +39,28 @@ class Restaurants with ChangeNotifier {
       instaUrl: 'https://www.youtube.com/watch?v=fC7oUOUEEi4',
     ),
   ];
+
+  /*List<Restaurant> _items = [];
+  Future<void> fetchRestaurant() async {
+    final response = await http
+        .get('https://foodsight-api.herokuapp.com/api/guestAllRestaurants');
+    if (response.statusCode == 200) {
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      bool flag = true;
+      extractedData.forEach((key, value) {
+        if (flag) {
+          List insideVal = value as List;
+          for (int i = 0; i < insideVal.length; i++) {
+            _items.add(Restaurant.fromJson(value[i]));
+          }
+          flag = false;
+        }
+      });
+      notifyListeners();
+    } else {
+      throw Exception('Failed to load Restaurant');
+    }
+  }*/
 
   List<Restaurant> get items {
     return [..._items];

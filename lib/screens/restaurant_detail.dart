@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/products.dart';
+import '../providers/restaurants.dart';
 import '../widgets/product_item.dart';
 import '../screens/restaurant_info.dart';
 
@@ -20,12 +21,14 @@ class RestaurantDetail extends StatelessWidget {
     final String id = ModalRoute.of(context).settings.arguments as String;
     final productsData = Provider.of<Products>(context, listen: false);
     final products = productsData.productsOfRestaurant(id);
+    final restaurant =
+        Provider.of<Restaurants>(context, listen: false).findById(id);
 
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Text("Restaurant Detail $id"),
+            Text("Seeing ${restaurant.name}"),
             InkWell(
               onTap: () => tappedInfo(context, id),
               child: Icon(Icons.info),
