@@ -4,6 +4,7 @@ import '../providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductFormScreen extends StatefulWidget {
   static const routeName = '/ProductFormScreen';
@@ -83,14 +84,24 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
   }
 
+  var imageFile;
+  Future<void> _takePicture() async {
+    imageFile = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 600,
+    );
+    print(imageFile);
+  }
+
   void _saveForm() {
     if (_formKey.currentState.validate()) {
       Fluttertoast.showToast(
-          msg: "Product Saved",
-          toastLength: Toast.LENGTH_LONG,
-          backgroundColor: Theme.of(context).accentColor,
-          textColor: Colors.white);
-      _formKey.currentState.save();
+        msg: "Product Saved",
+        toastLength: Toast.LENGTH_LONG,
+        backgroundColor: Theme.of(context).accentColor,
+        textColor: Colors.white,
+      );
+      _editedProduct.imageUrl = imageFile;
       if (_editedProduct.id != null) {
         Provider.of<Products>(context, listen: false)
             .updateProduct(_editedProduct.id, _editedProduct);
@@ -242,29 +253,34 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                               ),
                       ),
                       Expanded(
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.camera_alt),
-                            labelText: 'Image Url',
-                          ),
-                          keyboardType: TextInputType.url,
-                          textInputAction: TextInputAction.done,
-                          controller: _imageUrlController,
-                          focusNode: _imageUrlFocusNode,
-                          onFieldSubmitted: (_) {
-                            _saveForm();
-                          },
-                          onSaved: (value) {
-                            _editedProduct = Product(
-                                id: _editedProduct.id,
-                                name: _editedProduct.name,
-                                description: _editedProduct.description,
-                                price: _editedProduct.price,
-                                rating: _editedProduct.rating,
-                                imageUrl: value,
-                                idRestaurant: _editedProduct.idRestaurant);
-                          },
+                        child: FlatButton.icon(
+                          icon: Icon(Icons.camera),
+                          label: Text('Take a Picture'),
+                          onPressed: _takePicture,
                         ),
+                        // child: TextFormField(
+                        //   decoration: const InputDecoration(
+                        //     icon: Icon(Icons.camera_alt),
+                        //     labelText: 'Image Url',
+                        //   ),
+                        //   keyboardType: TextInputType.url,
+                        //   textInputAction: TextInputAction.done,
+                        //   controller: _imageUrlController,
+                        //   focusNode: _imageUrlFocusNode,
+                        //   onFieldSubmitted: (_) {
+                        //     _saveForm();
+                        //   },
+                        //   onSaved: (value) {
+                        //     _editedProduct = Product(
+                        //         id: _editedProduct.id,
+                        //         name: _editedProduct.name,
+                        //         description: _editedProduct.description,
+                        //         price: _editedProduct.price,
+                        //         rating: _editedProduct.rating,
+                        //         imageUrl: value,
+                        //         idRestaurant: _editedProduct.idRestaurant);
+                        //   },
+                        // ),
                       ),
                     ],
                   ),

@@ -86,7 +86,7 @@ class Products with ChangeNotifier {
         'name': product.name,
         'description': product.description,
         'price': product.price,
-        'imageUrl': product.imageUrl,
+        'image': product.imageUrl,
         'rating': product.rating,
       }),
     )
