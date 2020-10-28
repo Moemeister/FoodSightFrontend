@@ -102,7 +102,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     if (_formKey.currentState.validate()) {
       Fluttertoast.showToast(
           msg: "Restaurant Saved",
@@ -120,10 +120,11 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
           _isloading = false;
         });
       } else {
-        Provider.of<Restaurants>(context, listen: false)
-            .addRestaurant(_editedRestaurant)
-            .catchError((error) {
-          return showDialog(
+        try {
+          await Provider.of<Restaurants>(context, listen: false)
+              .addRestaurant(_editedRestaurant);
+        } catch (error) {
+          await showDialog(
             context: context,
             builder: (context) => AlertDialog(
               title: Text('An error ocurred'),
@@ -138,12 +139,12 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
               ],
             ),
           );
-        }).then((_) {
+        } finally {
           setState(() {
             _isloading = false;
           });
           Navigator.of(context).popAndPushNamed('/');
-        });
+        }
       }
     }
   }

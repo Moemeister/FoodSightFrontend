@@ -20,7 +20,7 @@ class Restaurant with ChangeNotifier {
   String fbUrl;
   String instaUrl;
   double rating;
-  PriceCategory priceCategory;
+  PriceCategory priceCategory = PriceCategory.Affordable;
 
   Restaurant(
       {this.id,
@@ -44,7 +44,7 @@ class Restaurant with ChangeNotifier {
     password = json['hashedPassword'];
     description = json['description'];
     phone = json['phone'];
-    //rating = json['rating'] as double;
+    rating = json['rating'] + .0;
     photoUrl = json['photo'];
     fbUrl = json['facebook'];
     instaUrl = json['instagram'];

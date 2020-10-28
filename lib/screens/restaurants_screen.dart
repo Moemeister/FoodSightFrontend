@@ -17,6 +17,7 @@ class RestaurantsScreen extends StatefulWidget {
 class _RestaurantsScreenState extends State<RestaurantsScreen> {
   SearchBar searchBar;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var _isLoading = false;
 
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
@@ -79,15 +80,18 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   PriceCategory _selectedPriceCategory = PriceCategory.All;
 
   var _isInit = true;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      //Provider.of<Restaurants>(context).fetchRestaurant();
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Restaurants>(context).fetchRestaurant().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
       //Provider.of<Products>(context).fetchProduct();
     }
     _isInit = false;
@@ -100,7 +104,11 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       appBar: searchBar.build(context),
       key: _scaffoldKey,
       drawer: MainDrawer(),
-      body: RestaurantListView(_selectedPriceCategory),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : RestaurantListView(_selectedPriceCategory),
     );
   }
 }

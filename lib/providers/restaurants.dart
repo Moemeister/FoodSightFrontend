@@ -5,42 +5,42 @@ import 'dart:convert';
 import '../models/restaurant.dart';
 
 class Restaurants with ChangeNotifier {
-  List<Restaurant> _items = [
-    Restaurant(
-      id: 'r1',
-      name: 'Hipster Restaurant',
-      email: 'hipsrestaurant@gmail.com',
-      address: 'En el ranchito',
-      description: 'La ensalada cuenta chistes muy graciosos',
-      location: 'Por alla',
-      password: '1234a',
-      phone: '22577777',
-      priceCategory: PriceCategory.Pricey,
-      rating: 3.0,
-      photoUrl:
-          'https://images-ext-1.discordapp.net/external/j66WmQSfDUAR1cAbnkrWrUL0hhX9UjUY4NCWbYrYuhg/%3Fixlib%3Drb-1.2.1%26ixid%3DeyJhcHBfaWQiOjEyMDd9%26auto%3Dformat%26fit%3Dcrop%26w%3D500%26q%3D60/https/images.unsplash.com/photo-1533777857889-4be7c70b33f7',
-      fbUrl: 'https://www.facebook.com/PizzaHut.SV',
-      instaUrl: 'https://www.youtube.com/watch?v=fC7oUOUEEi4',
-    ),
-    Restaurant(
-      id: 'r2',
-      name: 'Chorys',
-      email: 'choripanes@gmail.com',
-      address: 'Por todos lados',
-      description: 'Ricos y Baratos',
-      location: 'Por alla',
-      password: '1234a',
-      phone: '22577777',
-      priceCategory: PriceCategory.Affordable,
-      rating: 5.0,
-      photoUrl:
-          'https://images-ext-1.discordapp.net/external/Szy_YZPb6vFgJ5Wcqv3QXqeZqW16XVd2LeaMZml7j8g/https/elsalvadorgram.com/wp-content/uploads/2020/06/Chory-A-domicilio.jpg?width=747&height=560',
-      fbUrl: 'https://www.facebook.com/PizzaHut.SV',
-      instaUrl: 'https://www.youtube.com/watch?v=fC7oUOUEEi4',
-    ),
-  ];
+  // List<Restaurant> _items = [
+  //   Restaurant(
+  //     id: 'r1',
+  //     name: 'Hipster Restaurant',
+  //     email: 'hipsrestaurant@gmail.com',
+  //     address: 'En el ranchito',
+  //     description: 'La ensalada cuenta chistes muy graciosos',
+  //     location: 'Por alla',
+  //     password: '1234a',
+  //     phone: '22577777',
+  //     priceCategory: PriceCategory.Pricey,
+  //     rating: 3.0,
+  //     photoUrl:
+  //         'https://images-ext-1.discordapp.net/external/j66WmQSfDUAR1cAbnkrWrUL0hhX9UjUY4NCWbYrYuhg/%3Fixlib%3Drb-1.2.1%26ixid%3DeyJhcHBfaWQiOjEyMDd9%26auto%3Dformat%26fit%3Dcrop%26w%3D500%26q%3D60/https/images.unsplash.com/photo-1533777857889-4be7c70b33f7',
+  //     fbUrl: 'https://www.facebook.com/PizzaHut.SV',
+  //     instaUrl: 'https://www.youtube.com/watch?v=fC7oUOUEEi4',
+  //   ),
+  //   Restaurant(
+  //     id: 'r2',
+  //     name: 'Chorys',
+  //     email: 'choripanes@gmail.com',
+  //     address: 'Por todos lados',
+  //     description: 'Ricos y Baratos',
+  //     location: 'Por alla',
+  //     password: '1234a',
+  //     phone: '22577777',
+  //     priceCategory: PriceCategory.Affordable,
+  //     rating: 5.0,
+  //     photoUrl:
+  //         'https://images-ext-1.discordapp.net/external/Szy_YZPb6vFgJ5Wcqv3QXqeZqW16XVd2LeaMZml7j8g/https/elsalvadorgram.com/wp-content/uploads/2020/06/Chory-A-domicilio.jpg?width=747&height=560',
+  //     fbUrl: 'https://www.facebook.com/PizzaHut.SV',
+  //     instaUrl: 'https://www.youtube.com/watch?v=fC7oUOUEEi4',
+  //   ),
+  // ];
 
-  /*List<Restaurant> _items = [];
+  List<Restaurant> _items = [];
   Future<void> fetchRestaurant() async {
     final response = await http
         .get('https://foodsight-api.herokuapp.com/api/guestAllRestaurants');
@@ -60,7 +60,7 @@ class Restaurants with ChangeNotifier {
     } else {
       throw Exception('Failed to load Restaurant');
     }
-  }*/
+  }
 
   List<Restaurant> get items {
     return [..._items];
@@ -78,27 +78,24 @@ class Restaurants with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> addRestaurant(Restaurant restaurant) {
+  Future<void> addRestaurant(Restaurant restaurant) async {
     const url = 'https://foodsight-api.herokuapp.com/api/restaurant/create';
-    return http
-        .post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({
-        'name': restaurant.name,
-        'email': restaurant.email,
-        'password': restaurant.password,
-        'description': restaurant.description,
-        'phone': restaurant.phone,
-        'rating': 5,
-        'photo': restaurant.photoUrl,
-        'facebook': restaurant.fbUrl,
-        'instagram': restaurant.instaUrl
-      }),
-    )
-        .then((response) {
-      print(json.decode(response.body)['id']);
-
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          'name': restaurant.name,
+          'email': restaurant.email,
+          'password': restaurant.password,
+          'description': restaurant.description,
+          'phone': restaurant.phone,
+          'rating': 5,
+          'photo': restaurant.photoUrl,
+          'facebook': restaurant.fbUrl,
+          'instagram': restaurant.instaUrl
+        }),
+      );
       final newRestaurant = Restaurant(
         id: json.decode(response.body)['id'],
         address: restaurant.address,
@@ -116,10 +113,10 @@ class Restaurants with ChangeNotifier {
       );
       _items.add(newRestaurant);
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print(error);
       throw error;
-    });
+    }
   }
 
   void updateRestaurant(String id, Restaurant newRestaurant) {
