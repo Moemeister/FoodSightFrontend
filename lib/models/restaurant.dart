@@ -20,7 +20,7 @@ class Restaurant with ChangeNotifier {
   String fbUrl;
   String instaUrl;
   double rating;
-  PriceCategory priceCategory;
+  PriceCategory priceCategory = PriceCategory.Affordable;
 
   Restaurant(
       {this.id,
