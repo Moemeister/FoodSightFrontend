@@ -114,11 +114,12 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
         _isloading = true;
       });
       if (_editedRestaurant.id != null) {
-        Provider.of<Restaurants>(context, listen: false)
+        await Provider.of<Restaurants>(context, listen: false)
             .updateRestaurant(_editedRestaurant.id, _editedRestaurant);
         setState(() {
           _isloading = false;
         });
+        Navigator.of(context).popAndPushNamed('/');
       } else {
         try {
           await Provider.of<Restaurants>(context, listen: false)

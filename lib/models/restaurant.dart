@@ -35,7 +35,7 @@ class Restaurant with ChangeNotifier {
       this.fbUrl,
       this.instaUrl,
       this.rating,
-      this.priceCategory});
+      this.priceCategory = PriceCategory.Affordable});
 
   Restaurant.fromJson(Map<String, dynamic> json) {
     id = json['_id'];

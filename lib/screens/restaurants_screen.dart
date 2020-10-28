@@ -5,6 +5,7 @@ import '../widgets/restaurant_grid.dart';
 import '../widgets/drawer.dart';
 
 import '../models/restaurant.dart';
+import '../models/product.dart';
 import '../providers/restaurants.dart';
 import '../providers/products.dart';
 import 'package:provider/provider.dart';
@@ -84,15 +85,81 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Restaurants>(context).fetchRestaurant().then((_) {
+      if (Provider.of<Restaurants>(context).items.isEmpty ||
+          Provider.of<Products>(context).items.isEmpty) {
         setState(() {
-          _isLoading = false;
+          _isLoading = true;
         });
-      });
-      //Provider.of<Products>(context).fetchProduct();
+        Provider.of<Restaurants>(context, listen: false)
+            .fetchRestaurant()
+            .then((_) {
+          //Provider.of<Products>(context, listen: false)
+          //  .fetchProduct()
+          //.then((_) {
+          //Dynamic calculation of rating, based on products of the restaurants.
+          print("Setting Price Categories 1");
+          List<Restaurant> restaurants;
+          restaurants = Provider.of<Restaurants>(context, listen: false).items;
+          List<Product> products;
+          restaurants.forEach((element) {
+            products = Provider.of<Products>(context, listen: false)
+                .productsOfRestaurant(element.id);
+            var acum = 0.0;
+            int nitems = products.length;
+            for (int i = 0; i < products.length; i++) {
+              acum += products[i].price;
+            }
+
+            double category;
+            if (nitems == 0) {
+              category = 0.0;
+            } else {
+              category = acum / nitems;
+            }
+            if (category >= 0.0 && category <= 5.0) {
+              element.priceCategory = PriceCategory.Affordable;
+            } else if (category >= 5.1 && category <= 10.0) {
+              element.priceCategory = PriceCategory.Pricey;
+            } else {
+              element.priceCategory = PriceCategory.Luxurious;
+            }
+          });
+        }).then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+        //});
+      } else {
+        //Dynamic calculation of rating, based on products of the restaurants.
+        print("Setting Price Categories 2");
+        List<Restaurant> restaurants;
+        restaurants = Provider.of<Restaurants>(context, listen: false).items;
+        List<Product> products;
+        restaurants.forEach((element) {
+          products = Provider.of<Products>(context, listen: false)
+              .productsOfRestaurant(element.id);
+          var acum = 0.0;
+          int nitems = products.length;
+          for (int i = 0; i < products.length; i++) {
+            acum += products[i].price;
+          }
+
+          double category;
+          if (nitems == 0) {
+            category = 0.0;
+          } else {
+            category = acum / nitems;
+          }
+          if (category >= 0.0 && category <= 5.0) {
+            element.priceCategory = PriceCategory.Affordable;
+          } else if (category >= 5.1 && category <= 10.0) {
+            element.priceCategory = PriceCategory.Pricey;
+          } else {
+            element.priceCategory = PriceCategory.Luxurious;
+          }
+        });
+      }
     }
     _isInit = false;
     super.didChangeDependencies();
