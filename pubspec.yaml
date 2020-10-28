@@ -39,6 +39,7 @@ dev_dependencies:
   fluttertoast: ^7.1.1
   flutter_search_bar: ^2.1.0
   http: ^0.12.2
+  url_launcher: ^5.0.2
 
 
 
@@ -52,6 +53,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+#Icons of Facebook and Instagram
+  assets:
+    - assets/icons/icons8-facebook-24.png
+    - assets/icons/icons8-facebook-48.png
+    - assets/icons/icons8-instagram-24.png
+    - assets/icons/icons8-instagram-48.png
+    - assets/icons/icons8-call-24.png
+    - assets/icons/icons8-call-48.png
+    - assets/icons/icons8-send-email-24.png
+    - assets/icons/icons8-send-email-48.png
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
