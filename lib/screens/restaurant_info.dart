@@ -131,48 +131,50 @@ class RestaurantInformation extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.all(10),
                       child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Contact: ",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Contact: ",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Container(
-                                margin: EdgeInsets.only(
-                                  left: 10,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: 10,
+                            ),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () =>
+                                      onClickPhoneIcon(restaurant.phone),
+                                  child: Image.asset(
+                                      "assets/icons/icons8-call-48.png"),
                                 ),
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () =>
-                                          onClickPhoneIcon(restaurant.phone),
-                                      child: Image.asset(
-                                          "assets/icons/icons8-call-48.png"),
-                                    ),
-                                    InkWell(
-                                      onTap: () =>
-                                          onClickEmailIcon(restaurant.email),
-                                      child: Image.asset(
-                                          "assets/icons/icons8-send-email-48.png"),
-                                    ),
-                                    InkWell(
-                                      onTap: () =>
-                                          onClickFacebookIcon(restaurant.fbUrl),
-                                      child: Image.asset(
-                                          "assets/icons/icons8-facebook-48.png"),
-                                    ),
-                                    InkWell(
-                                      onTap: () => onClickInstagramIcon(
-                                          restaurant.instaUrl),
-                                      child: Image.asset(
-                                          "assets/icons/icons8-instagram-48.png"),
-                                    )
-                                  ],
-                                ))
-                          ]),
+                                InkWell(
+                                  onTap: () =>
+                                      onClickEmailIcon(restaurant.email),
+                                  child: Image.asset(
+                                      "assets/icons/icons8-send-email-48.png"),
+                                ),
+                                InkWell(
+                                  onTap: () =>
+                                      onClickFacebookIcon(restaurant.fbUrl),
+                                  child: Image.asset(
+                                      "assets/icons/icons8-facebook-48.png"),
+                                ),
+                                InkWell(
+                                  onTap: () =>
+                                      onClickInstagramIcon(restaurant.instaUrl),
+                                  child: Image.asset(
+                                      "assets/icons/icons8-instagram-48.png"),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
