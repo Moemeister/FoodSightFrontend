@@ -79,7 +79,7 @@ class Restaurants with ChangeNotifier {
   }
 
   Future<void> addRestaurant(Restaurant restaurant) async {
-    const url = 'https://foodsight-api.herokuapp.com/api/restaurant/create';
+    const url = 'https://foodsight-api.herokuapp.com/api/auth/signup';
     try {
       final response = await http.post(
         url,
@@ -96,6 +96,7 @@ class Restaurants with ChangeNotifier {
           'instagram': restaurant.instaUrl
         }),
       );
+      print(response.body);
       final newRestaurant = Restaurant(
         id: json.decode(response.body)['id'],
         address: restaurant.address,

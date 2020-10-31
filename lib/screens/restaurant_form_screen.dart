@@ -258,6 +258,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                             icon: Icon(Icons.lock),
                             labelText: 'Password',
                           ),
+                          obscureText: true,
                           onFieldSubmitted: (value) {
                             //FocusScope.of(context).requestFocus(_emailFocusNode);
                           },

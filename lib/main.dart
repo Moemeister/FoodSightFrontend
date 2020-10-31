@@ -12,6 +12,7 @@ import './screens/restaurants_screen.dart';
 import './screens/restaurant_detail.dart';
 import './screens/restaurant_info.dart';
 import './providers/restaurants.dart';
+import 'providers/auth.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -39,48 +40,58 @@ class FoodSight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => Restaurants(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => Products(),
-        ),
-      ],
-      child: MaterialApp(
-        title: 'FoodSight',
-        theme: ThemeData(
-          errorColor: Colors.red,
-          primaryColor: _primaryColor,
-          primaryColorLight: _lightPrimaryColor,
-          primaryColorDark: _darkPrimaryColor,
-          accentColor: _accentColor,
-          dividerColor: _dividerColor,
-          fontFamily: 'RobotoCondensed',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.bold,
-                  color: _textsIcons,
-                ),
-                headline5: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.bold,
-                  color: _primaryText,
-                ),
-              ),
-        ),
-        routes: {
-          '/': (context) => RestaurantsScreen(),
-          RestaurantDetail.routeName: (context) => RestaurantDetail(),
-          RestaurantInformation.routeName: (context) => RestaurantInformation(),
-          RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
-          ProductFormScreen.routeName: (context) => ProductFormScreen(),
-          AuthScreen.routeName: (context) => AuthScreen(),
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: (ctx) => Auth(),
+          ),
+          ChangeNotifierProvider(
+            create: (ctx) => Restaurants(),
+          ),
+          ChangeNotifierProxyProvider<Auth, Products>(
+            //create: (ctx) => Products(null, []),
+            update: (ctx, auth, previousProducts) => Products(
+              auth.logId,
+              previousProducts == null ? [] : previousProducts.items,
+            ),
+          ),
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, authData, _) => MaterialApp(
+            title: 'FoodSight',
+            theme: ThemeData(
+              errorColor: Colors.red,
+              primaryColor: _primaryColor,
+              primaryColorLight: _lightPrimaryColor,
+              primaryColorDark: _darkPrimaryColor,
+              accentColor: _accentColor,
+              dividerColor: _dividerColor,
+              fontFamily: 'RobotoCondensed',
+              textTheme: ThemeData.light().textTheme.copyWith(
+                    headline6: TextStyle(
+                      fontSize: 20,
+                      fontFamily: 'RobotoCondensed',
+                      fontWeight: FontWeight.bold,
+                      color: _textsIcons,
+                    ),
+                    headline5: TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'RobotoCondensed',
+                      fontWeight: FontWeight.bold,
+                      color: _primaryText,
+                    ),
+                  ),
+            ),
+            routes: {
+              '/': (context) => RestaurantsScreen(),
+              RestaurantDetail.routeName: (context) => RestaurantDetail(),
+              RestaurantInformation.routeName: (context) =>
+                  RestaurantInformation(),
+              RestaurantFormScreen.routeName: (context) =>
+                  RestaurantFormScreen(),
+              ProductFormScreen.routeName: (context) => ProductFormScreen(),
+              AuthScreen.routeName: (context) => AuthScreen(),
+            },
+          ),
+        ));
   }
 }

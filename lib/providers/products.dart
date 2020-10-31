@@ -3,42 +3,43 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 class Products with ChangeNotifier {
-  List<Product> _items = [
-    Product(
-        id: "p1",
-        idRestaurant: "r1",
-        name: "Ratatouille",
-        description: "Exquisitas hortalizas guisadas",
-        price: 5.00,
-        imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/8/8a/Ratatouille02.jpg",
-        rating: 3.0),
-    Product(
-        id: "p2",
-        idRestaurant: "r2",
-        name: "Chory",
-        description: "Exquisito hot dog con repollo, salsas y chile",
-        price: 1.10,
-        imageUrl:
-            "https://cdn-pro.elsalvador.com/wp-content/uploads/2018/01/Chory.jpg",
-        rating: 5.0),
-    Product(
-      id: 'p3',
-      idRestaurant: "r1",
-      name: 'Pollo',
-      description: 'guisado',
-      price: 12.0,
-      imageUrl:
-          'https://live.mrf.io/statics/i/ps/www.cocinacaserayfacil.net/wp-content/uploads/2017/07/pollo-guisado-con-verduras-receta.jpg?width=1200&enable=upscale',
-      rating: 4.3,
-    ),
-  ];
+  // List<Product> _items = [
+  //   Product(
+  //       id: "p1",
+  //       idRestaurant: "r1",
+  //       name: "Ratatouille",
+  //       description: "Exquisitas hortalizas guisadas",
+  //       price: 5.00,
+  //       imageUrl:
+  //           "https://upload.wikimedia.org/wikipedia/commons/8/8a/Ratatouille02.jpg",
+  //       rating: 3.0),
+  //   Product(
+  //       id: "p2",
+  //       idRestaurant: "r2",
+  //       name: "Chory",
+  //       description: "Exquisito hot dog con repollo, salsas y chile",
+  //       price: 1.10,
+  //       imageUrl:
+  //           "https://cdn-pro.elsalvador.com/wp-content/uploads/2018/01/Chory.jpg",
+  //       rating: 5.0),
+  //   Product(
+  //     id: 'p3',
+  //     idRestaurant: "r1",
+  //     name: 'Pollo',
+  //     description: 'guisado',
+  //     price: 12.0,
+  //     imageUrl:
+  //         'https://live.mrf.io/statics/i/ps/www.cocinacaserayfacil.net/wp-content/uploads/2017/07/pollo-guisado-con-verduras-receta.jpg?width=1200&enable=upscale',
+  //     rating: 4.3,
+  //   ),
+  // ];
 
-  /*List<Product> _items = [];
+  final String authId;
+  List<Product> _items = [];
+
+  Products(this.authId, this._items);
+
   Future<void> fetchProduct() async {
     final response = await http
         .get('https://foodsight-api.herokuapp.com/api/guestAllProducts');
@@ -54,13 +55,15 @@ class Products with ChangeNotifier {
           flag = false;
         }
       });
+
       notifyListeners();
     } else {
       throw Exception('Failed to load Products');
     }
-  }*/
+  }
 
   List<Product> get items {
+    print('SOY UN ID EXTRAIDO DE LA RESPUESTA DEL LOGIN $authId');
     return [..._items];
   }
 
@@ -92,7 +95,6 @@ class Products with ChangeNotifier {
       }),
     )
         .then((response) {
-      
       final newProduct = Product(
           //id: json.decode(response.body)['id'],
           idRestaurant: product.idRestaurant,

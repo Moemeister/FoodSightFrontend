@@ -1,7 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:FoodSight/screens/restaurants_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../providers/auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'restaurant_form_screen.dart';
 
 enum AuthMode { SignupRes, Login, SignupUsr }
@@ -114,9 +118,28 @@ class _AuthCardState extends State<AuthCard> {
     'password': '',
   };
   var _isLoading = false;
+  var _isRestaurant = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: Text('An error ocurred D:!'),
+            content: Text(message),
+            actions: [
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Okay'))
+            ],
+          );
+        });
+  }
+
+  Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -125,10 +148,29 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+    try {
+      if (_authMode == AuthMode.Login) {
+        if (_isRestaurant) {
+          await Provider.of<Auth>(context, listen: false)
+              .signInRes(_authData['email'], _authData['password']);
+          Fluttertoast.showToast(
+              msg: "Welcome back ",
+              toastLength: Toast.LENGTH_LONG,
+              backgroundColor: Theme.of(context).accentColor,
+              textColor: Colors.white);
+          Navigator.of(context).pushReplacementNamed('/');
+        } else {
+          await Provider.of<Auth>(context, listen: false)
+              .signInUsr(_authData['email'], _authData['password']);
+          Navigator.of(context).pushReplacementNamed('/');
+        }
+      }
+    } catch (error) {
+      //var errorMessage = 'Could not authenticate, plase try later';
+      _showErrorDialog(
+        error.toString(),
+      );
+      print(error);
     }
     setState(() {
       _isLoading = false;
@@ -164,9 +206,9 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.SignupRes ? 260 : 320,
+        height: _authMode == AuthMode.SignupRes ? 240 : 480,
         constraints: BoxConstraints(
-            minHeight: _authMode == AuthMode.SignupRes ? 260 : 320),
+            minHeight: _authMode == AuthMode.SignupRes ? 240 : 480),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -210,9 +252,22 @@ class _AuthCardState extends State<AuthCard> {
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     textColor: Theme.of(context).primaryColor,
                   ),
+                if (_authMode == AuthMode.Login)
+                  SwitchListTile(
+                    title: const Text(
+                      'Login as a Restaurant',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF757575),
+                      ),
+                    ),
+                    value: _isRestaurant,
+                    onChanged: (bool val) =>
+                        setState(() => _isRestaurant = val),
+                  ),
                 if (_authMode == AuthMode.SignupRes)
                   SizedBox(
-                    height: 50,
+                    height: 20,
                   ),
                 if (_authMode == AuthMode.SignupRes)
                   RaisedButton(
@@ -238,9 +293,9 @@ class _AuthCardState extends State<AuthCard> {
                     color: Theme.of(context).accentColor,
                     textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
-                SizedBox(
-                  height: 20,
-                ),
+                // SizedBox(
+                //   height: 20,
+                // ),
                 if (_isLoading)
                   CircularProgressIndicator()
                 else if (_authMode == AuthMode.Login)
