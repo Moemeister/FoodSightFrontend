@@ -40,58 +40,59 @@ class FoodSight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (ctx) => Auth(),
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Restaurants(),
+        ),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          //create: (ctx) => Products(null, []),
+          update: (ctx, auth, previousProducts) => Products(
+            auth.logId,
+            previousProducts == null ? [] : previousProducts.items,
           ),
-          ChangeNotifierProvider(
-            create: (ctx) => Restaurants(),
-          ),
-          ChangeNotifierProxyProvider<Auth, Products>(
-            //create: (ctx) => Products(null, []),
-            update: (ctx, auth, previousProducts) => Products(
-              auth.logId,
-              previousProducts == null ? [] : previousProducts.items,
-            ),
-          ),
-        ],
-        child: Consumer<Auth>(
-          builder: (ctx, authData, _) => MaterialApp(
-            title: 'FoodSight',
-            theme: ThemeData(
-              errorColor: Colors.red,
-              primaryColor: _primaryColor,
-              primaryColorLight: _lightPrimaryColor,
-              primaryColorDark: _darkPrimaryColor,
-              accentColor: _accentColor,
-              dividerColor: _dividerColor,
-              fontFamily: 'RobotoCondensed',
-              textTheme: ThemeData.light().textTheme.copyWith(
-                    headline6: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'RobotoCondensed',
-                      fontWeight: FontWeight.bold,
-                      color: _textsIcons,
-                    ),
-                    headline5: TextStyle(
-                      fontSize: 24,
-                      fontFamily: 'RobotoCondensed',
-                      fontWeight: FontWeight.bold,
-                      color: _primaryText,
-                    ),
+        ),
+      ],
+      child: Consumer<Auth>(
+        builder: (ctx, authData, _) => MaterialApp(
+          title: 'FoodSight',
+          theme: ThemeData(
+            errorColor: Colors.red,
+            primaryColor: _primaryColor,
+            primaryColorLight: _lightPrimaryColor,
+            primaryColorDark: _darkPrimaryColor,
+            accentColor: _accentColor,
+            dividerColor: _dividerColor,
+            fontFamily: 'RobotoCondensed',
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'RobotoCondensed',
+                    fontWeight: FontWeight.bold,
+                    color: _textsIcons,
                   ),
-            ),
-            routes: {
-              '/': (context) => RestaurantsScreen(),
-              RestaurantDetail.routeName: (context) => RestaurantDetail(),
-              RestaurantInformation.routeName: (context) =>
-                  RestaurantInformation(),
-              RestaurantFormScreen.routeName: (context) =>
-                  RestaurantFormScreen(),
-              ProductFormScreen.routeName: (context) => ProductFormScreen(),
-              AuthScreen.routeName: (context) => AuthScreen(),
-            },
+                  headline5: TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'RobotoCondensed',
+                    fontWeight: FontWeight.bold,
+                    color: _primaryText,
+                  ),
+                ),
           ),
-        ));
+          routes: {
+            '/': (context) => RestaurantsScreen(),
+            RestaurantDetail.routeName: (context) => RestaurantDetail(),
+            RestaurantInformation.routeName: (context) =>
+                RestaurantInformation(),
+            RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
+            ProductFormScreen.routeName: (context) => ProductFormScreen(),
+            AuthScreen.routeName: (context) => AuthScreen(),
+          },
+          debugShowCheckedModeBanner: false,
+        ),
+      ),
+    );
   }
 }

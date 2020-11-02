@@ -65,6 +65,7 @@ flutter:
     - assets/icons/icons8-call-48.png
     - assets/icons/icons8-send-email-24.png
     - assets/icons/icons8-send-email-48.png
+    - assets/icons/icons8-next-location-24.png
 
 
   # To add assets to your application, add an assets section, like this:

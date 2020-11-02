@@ -1,3 +1,4 @@
+import 'package:FoodSight/widgets/google_map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:async/async.dart';
@@ -70,110 +71,183 @@ class RestaurantInformation extends StatelessWidget {
                       child: Text(
                         "${restaurant.name}",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 28,
+                          backgroundColor: Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Description: ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text("${restaurant.description}",
-                                style: TextStyle(fontSize: 20),
-                                overflow: TextOverflow.fade),
-                          ),
-                        ],
-                      ),
+                      height: 10,
                     ),
                     Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Address: ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text("${restaurant.address}",
-                              style: TextStyle(fontSize: 20)),
-                        ],
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Theme.of(context).accentColor),
+                        shape: BoxShape.rectangle,
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Email: ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Description:",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          backgroundColor:
+                                              Theme.of(context).accentColor,
+                                        ),
+                                      ),
+                                      Text(" ${restaurant.description}",
+                                          style: TextStyle(fontSize: 20),
+                                          overflow: TextOverflow.visible),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Text("${restaurant.email}",
-                              style: TextStyle(fontSize: 20)),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Contact: ",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            Container(
+                                margin: EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Location:",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        backgroundColor:
+                                            Theme.of(context).accentColor,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            Container(
+                              //child: MapRestaurantLocation(restaurant.location),
+                              child: MapRestaurantLocation(
+                                  "13.6789672,-89.2418977"),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: 10,
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: 10,
+                                left: 10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Contact:",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor:
+                                          Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      left: 10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () => onClickPhoneIcon(
+                                              restaurant.phone),
+                                          child: Image.asset(
+                                              "assets/icons/icons8-call-48.png"),
+                                        ),
+                                        InkWell(
+                                          onTap: () => onClickEmailIcon(
+                                              restaurant.email),
+                                          child: Image.asset(
+                                              "assets/icons/icons8-send-email-48.png"),
+                                        ),
+                                        InkWell(
+                                          onTap: () => onClickFacebookIcon(
+                                              restaurant.fbUrl),
+                                          child: Image.asset(
+                                              "assets/icons/icons8-facebook-48.png"),
+                                        ),
+                                        InkWell(
+                                          onTap: () => onClickInstagramIcon(
+                                              restaurant.instaUrl),
+                                          child: Image.asset(
+                                              "assets/icons/icons8-instagram-48.png"),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: () =>
-                                      onClickPhoneIcon(restaurant.phone),
-                                  child: Image.asset(
-                                      "assets/icons/icons8-call-48.png"),
-                                ),
-                                InkWell(
-                                  onTap: () =>
-                                      onClickEmailIcon(restaurant.email),
-                                  child: Image.asset(
-                                      "assets/icons/icons8-send-email-48.png"),
-                                ),
-                                InkWell(
-                                  onTap: () =>
-                                      onClickFacebookIcon(restaurant.fbUrl),
-                                  child: Image.asset(
-                                      "assets/icons/icons8-facebook-48.png"),
-                                ),
-                                InkWell(
-                                  onTap: () =>
-                                      onClickInstagramIcon(restaurant.instaUrl),
-                                  child: Image.asset(
-                                      "assets/icons/icons8-instagram-48.png"),
-                                )
-                              ],
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Address:",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor:
+                                          Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                  Text(" ${restaurant.address}",
+                                      style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
                             ),
-                          )
-                        ],
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Phone:",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor:
+                                          Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                  Text(" ${restaurant.phone}",
+                                      style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Email:",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor:
+                                          Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                  Text(" ${restaurant.email}",
+                                      style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
