@@ -46,6 +46,7 @@ class Restaurant with ChangeNotifier {
     phone = json['phone'];
     rating = json['rating'] + .0;
     photoUrl = json['photo'];
+    location = json['location'];
     fbUrl = json['facebook'];
     instaUrl = json['instagram'];
   }

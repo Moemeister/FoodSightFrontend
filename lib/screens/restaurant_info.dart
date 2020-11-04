@@ -132,9 +132,9 @@ class RestaurantInformation extends StatelessWidget {
                                   ],
                                 )),
                             Container(
-                              //child: MapRestaurantLocation(restaurant.location),
-                              child: MapRestaurantLocation(
-                                  "13.6789672,-89.2418977"),
+                              child: MapRestaurantLocation(restaurant.location),
+                              //   child: MapRestaurantLocation(
+                              //       "13.6789672,-89.2418977"),
                             ),
                             Container(
                               margin: EdgeInsets.only(

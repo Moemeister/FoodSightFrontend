@@ -48,7 +48,7 @@ class FoodSight extends StatelessWidget {
           create: (ctx) => Restaurants(),
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
-          //create: (ctx) => Products(null, []),
+          create: (ctx) => Products(null, []),
           update: (ctx, auth, previousProducts) => Products(
             auth.logId,
             previousProducts == null ? [] : previousProducts.items,

@@ -84,7 +84,7 @@ class Products with ChangeNotifier {
       urlHeroku,
       headers: {
         "Content-Type": "multipart/form-data",
-        "_id": "5f972850e5f83c001786715c",
+        "_id": "$authId",
       },
       body: json.encode({
         'name': product.name,
@@ -97,7 +97,7 @@ class Products with ChangeNotifier {
         .then((response) {
       final newProduct = Product(
           //id: json.decode(response.body)['id'],
-          idRestaurant: product.idRestaurant,
+          idRestaurant: authId,
           name: product.name,
           description: product.description,
           price: product.price,
