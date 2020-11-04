@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class Products with ChangeNotifier {
   // List<Product> _items = [
@@ -75,47 +78,88 @@ class Products with ChangeNotifier {
     return _items.where((element) => element.idRestaurant == resId).toList();
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product, File image) async {
     const urlHeroku = 'https://foodsight-api.herokuapp.com/api/product/create';
+    Dio dio = new Dio();
+    print("********** RUTA DE FOTO: " + image.toString());
 
-    print(product.imageUrl.toString() + "putisima madre");
-    return http
-        .post(
-      urlHeroku,
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "_id": "5f972850e5f83c001786715c",
-      },
-      body: json.encode({
+    try {
+      String filename = image.path.split('/').last;
+      FormData formData = new FormData.fromMap({
         'name': product.name,
         'description': product.description,
         'price': product.price,
-        'image': product.imageUrl,
         'rating': product.rating,
-      }),
-    )
-        .then((response) {
-      final newProduct = Product(
-          //id: json.decode(response.body)['id'],
-          idRestaurant: product.idRestaurant,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          rating: product.rating);
-
-      _items.add(newProduct);
-      notifyListeners();
-    });
+        'image': await MultipartFile.fromFile(image.path,
+            filename: filename, contentType: MediaType('image', 'jpg')),
+      });
+      Response response = await dio.post(
+        urlHeroku,
+        data: formData,
+        options: Options(
+          headers: {
+            //"Content-Type": "multipart/form-data",
+            "_id": '$authId' ,
+            //"_id": "5f972850e5f83c001786715c",
+          },
+        ),
+      );
+      print(response.data);
+      //LOCAL
+      // final newRestaurant = Product(
+      //   id: json.decode(response.body)['id'],
+      //   name: product.name,
+      //   description: product.description,
+      //   price: product.price,
+      //   rating: product.rating,
+      //   imageUrl: product.imageUrl,
+      // );
+      // _items.add(newRestaurant);
+      // notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct, File image) async {
     final prodIndex = _items.indexWhere((element) => element.id == id);
+    print(prodIndex);
+    const urlHeroku = 'https://foodsight-api.herokuapp.com/api/product/update';
+    Dio dio = new Dio();
+    print("********** RUTA DE FOTO: " + image.toString());
+    String filename = 'test';
+    print("FOTOOOOO" + newProduct.imageUrl);
     if (prodIndex >= 0) {
-      _items[prodIndex] = newProduct;
-      notifyListeners();
-    } else {
-      print('...');
+      try {
+        if (image != null) {
+          filename = image.path.split('/').last;
+        }
+        FormData formData = new FormData.fromMap({
+          '_id': id,
+          'name': newProduct.name,
+          'description': newProduct.description,
+          'price': newProduct.price,
+          'rating': newProduct.rating,
+          'image': image == null
+              ? newProduct.imageUrl
+              : await MultipartFile.fromFile(image.path,
+                  filename: filename, contentType: MediaType('image', 'jpg')),
+        });
+        Response response = await dio.put(
+          urlHeroku,
+          data: formData,
+          options: Options(
+            headers: {
+              //"Content-Type": "multipart/form-data",
+              "_id": "5f972850e5f83c001786715c",
+            },
+          ),
+        );
+        _items[prodIndex] = newProduct;
+        notifyListeners();
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }
