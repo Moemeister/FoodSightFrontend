@@ -104,20 +104,21 @@ class Products with ChangeNotifier {
           },
         ),
       );
+      print('SOY LA RESPUESTA DE LA API' + response.data['photo']);
       print('HOLI SOY EL ID DEL PRODUCTO NUEVO' + response.data['id']);
       //LOCAL
       print('ANTES DE AGREGAR NUEVO ' + _items.length.toString());
       final newRestaurant = Product(
         id: response.data['id'],
+        idRestaurant: '$authId',
         name: product.name,
         description: product.description,
         price: product.price,
         rating: product.rating,
-        imageUrl: product.imageUrl,
+        imageUrl: response.data['photo'].toString(),
       );
       _items.add(newRestaurant);
       print('DESPUES DE AGREGAR NUEVO ' + _items.length.toString());
-
       notifyListeners();
     } catch (e) {
       print(e);
@@ -154,7 +155,7 @@ class Products with ChangeNotifier {
           options: Options(
             headers: {
               //"Content-Type": "multipart/form-data",
-              "_id": "5f972850e5f83c001786715c",
+              "_id": "$authId",
             },
           ),
         );

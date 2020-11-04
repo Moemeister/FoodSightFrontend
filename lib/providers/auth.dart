@@ -62,4 +62,28 @@ class Auth with ChangeNotifier {
       throw e;
     }
   }
+
+  Future<void> signUpUsr(String email, String username, String password) async {
+    const url = 'https://foodsight-api.herokuapp.com/test/authU/signup';
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+            {'email': email, 'username': username, 'password': password}),
+      );
+
+      final responseData = json.decode(response.body);
+      if (responseData.toString().contains('error')) {
+        throw responseData['error'];
+      }
+      _id = responseData.toString();
+
+      print('SOY UN NUEVO USUARIO');
+      print(json.decode(response.body));
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
 }

@@ -113,7 +113,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     if (_formKey.currentState.validate()) {
       Fluttertoast.showToast(
           msg: "Product Saved",
@@ -126,11 +126,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       });
       print(_editedProduct.imageUrl);
       if (_editedProduct.id != null) {
-        Provider.of<Products>(context, listen: false)
+        await Provider.of<Products>(context, listen: false)
             .updateProduct(_editedProduct.id, _editedProduct, image);
+        setState(() {
+          _isloading = false;
+        });
         Navigator.of(context).popAndPushNamed('/');
       } else {
-        Provider.of<Products>(context, listen: false)
+        await Provider.of<Products>(context, listen: false)
             .addProduct(_editedProduct, image)
             .then((_) {
           setState(() {
