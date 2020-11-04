@@ -1,4 +1,5 @@
 import 'package:FoodSight/screens/auth_screen.dart';
+import 'package:FoodSight/screens/user_form_screen.dart';
 
 import './providers/products.dart';
 import './screens/product_form_screen.dart';
@@ -89,6 +90,7 @@ class FoodSight extends StatelessWidget {
             RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
             ProductFormScreen.routeName: (context) => ProductFormScreen(),
             AuthScreen.routeName: (context) => AuthScreen(),
+            UserSignupScreen.routeName : (context) => UserSignupScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),

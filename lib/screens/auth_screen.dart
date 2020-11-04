@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:FoodSight/screens/restaurants_screen.dart';
+import 'package:FoodSight/screens/user_form_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../providers/auth.dart';
@@ -154,7 +155,7 @@ class _AuthCardState extends State<AuthCard> {
           await Provider.of<Auth>(context, listen: false)
               .signInRes(_authData['email'], _authData['password']);
           Fluttertoast.showToast(
-              msg: "Welcome back ",
+              msg: "Welcome",
               toastLength: Toast.LENGTH_LONG,
               backgroundColor: Theme.of(context).accentColor,
               textColor: Colors.white);
@@ -162,6 +163,11 @@ class _AuthCardState extends State<AuthCard> {
         } else {
           await Provider.of<Auth>(context, listen: false)
               .signInUsr(_authData['email'], _authData['password']);
+              Fluttertoast.showToast(
+              msg: "Welcome",
+              toastLength: Toast.LENGTH_LONG,
+              backgroundColor: Theme.of(context).accentColor,
+              textColor: Colors.white);
           Navigator.of(context).pushReplacementNamed('/');
         }
       }
@@ -193,9 +199,13 @@ class _AuthCardState extends State<AuthCard> {
     Navigator.of(context).pushNamed(RestaurantFormScreen.routeName);
   }
 
-  void _forgotPass() {}
+  void _forgotPass() {
 
-  void _newUser() {}
+  }
+
+  void _newUser() {
+    Navigator.of(context).pushNamed(UserSignupScreen.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {

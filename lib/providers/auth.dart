@@ -31,7 +31,7 @@ class Auth with ChangeNotifier {
       _id = responseData.toString();
       notifyListeners();
       if (responseData.toString().contains('error')) {
-        print('SOY UN RESTAURANTE aqui error?');
+        //print('SOY UN RESTAURANTE aqui error?');
         throw responseData['error'];
       }
     } catch (e) {
@@ -55,7 +55,7 @@ class Auth with ChangeNotifier {
       }
       _id = responseData.toString();
 
-      print('SOY UN USUARIO');
+      print('SOY UN USUARIO' + _id);
       print(json.decode(response.body));
       notifyListeners();
     } catch (e) {
@@ -73,14 +73,17 @@ class Auth with ChangeNotifier {
             {'email': email, 'username': username, 'password': password}),
       );
 
-      final responseData = json.decode(response.body);
-      if (responseData.toString().contains('error')) {
+      print(json.encode(
+            {'email': email, 'username': username, 'password': password}));
+
+      if (response.body.isNotEmpty && response.body.toString().contains('error')) {
+        final responseData = json.decode(response.body);
         throw responseData['error'];
       }
-      _id = responseData.toString();
+      //_id = responseData;
 
-      print('SOY UN NUEVO USUARIO');
-      print(json.decode(response.body));
+      //print('SOY UN NUEVO USUARIO' + json.decode(response.body));
+      //print(json.decode(response.body));
       notifyListeners();
     } catch (e) {
       throw e;
