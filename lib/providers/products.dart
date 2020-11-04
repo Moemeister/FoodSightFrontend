@@ -99,11 +99,23 @@ class Products with ChangeNotifier {
         options: Options(
           headers: {
             //"Content-Type": "multipart/form-data",
-            //"_id": $authId ,
-            "_id": "5f972850e5f83c001786715c",
+            "_id": '$authId' ,
+            //"_id": "5f972850e5f83c001786715c",
           },
         ),
       );
+      print(response.data);
+      //LOCAL
+      // final newRestaurant = Product(
+      //   id: json.decode(response.body)['id'],
+      //   name: product.name,
+      //   description: product.description,
+      //   price: product.price,
+      //   rating: product.rating,
+      //   imageUrl: product.imageUrl,
+      // );
+      // _items.add(newRestaurant);
+      // notifyListeners();
     } catch (e) {
       print(e);
     }
