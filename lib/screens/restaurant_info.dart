@@ -1,10 +1,11 @@
 import 'package:FoodSight/widgets/google_map_widget.dart';
+import 'package:FoodSight/widgets/star_rating_stateful.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:async/async.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/restaurants.dart';
+import '../widgets/star_rating.dart';
 
 class RestaurantInformation extends StatelessWidget {
   static final String routeName = "/restaurant-information";
@@ -243,6 +244,29 @@ class RestaurantInformation extends StatelessWidget {
                                   ),
                                   Text(" ${restaurant.email}",
                                       style: TextStyle(fontSize: 20)),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Rating:",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor:
+                                          Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: StatefulStarRating(
+                                      restaurant.rating.round(),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
