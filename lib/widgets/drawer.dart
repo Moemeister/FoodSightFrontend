@@ -63,7 +63,7 @@ class MainDrawer extends StatelessWidget {
           'Add New Product',
           Icons.add_circle_outline,
           () {
-            Navigator.of(context).pushNamed(ProductFormScreen.routeName);
+            Navigator.of(context).popAndPushNamed(ProductFormScreen.routeName);
           },
         ),
         SizedBox(height: 20),
