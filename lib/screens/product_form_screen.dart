@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../models/product.dart';
 
 import '../providers/products.dart';
@@ -59,10 +61,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           'description': _editedProduct.description,
           'rating': _editedProduct.rating.toString(),
           'price': _editedProduct.price.toString(),
-          'imageUrl': '',
+          'imageUrl': _editedProduct.imageUrl,
         };
         _imageUrlController.text = _editedProduct.imageUrl;
       }
+     
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -85,13 +88,30 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     }
   }
 
-  var imageFile;
+  File image;
+
   Future<void> _takePicture() async {
-    imageFile = await ImagePicker.pickImage(
+    var imageFile = await ImagePicker.pickImage(
       source: ImageSource.camera,
       maxWidth: 600,
     );
-    print(imageFile);
+    if (imageFile != null) {
+      setState(() {
+        image = imageFile;
+      });
+    }
+  }
+
+  Future<void> _selectPicture() async {
+    var imageFile = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 600,
+    );
+    if (imageFile != null) {
+      setState(() {
+        image = imageFile;
+      });
+    }
   }
 
   void _saveForm() {
@@ -105,14 +125,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       setState(() {
         _isloading = true;
       });
-      _editedProduct.imageUrl = imageFile.toString();
+      print(_editedProduct.imageUrl);
       if (_editedProduct.id != null) {
         Provider.of<Products>(context, listen: false)
-            .updateProduct(_editedProduct.id, _editedProduct);
+            .updateProduct(_editedProduct.id, _editedProduct, image);
         Navigator.of(context).popAndPushNamed('/');
       } else {
         Provider.of<Products>(context, listen: false)
-            .addProduct(_editedProduct)
+            .addProduct(_editedProduct, image)
             .then((_) {
           setState(() {
             _isloading = false;
@@ -246,7 +266,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           },
                         ),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
                               width: 100,
@@ -261,44 +282,39 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              child: _imageUrlController.text.isEmpty
-                                  ? Text('Enter URL')
-                                  : FittedBox(
-                                      child: Image.network(
-                                        _imageUrlController.text,
-                                        fit: BoxFit.cover,
-                                      ),
+                              child: Builder(builder: (context) {
+                                if (image == null &&
+                                    _initValues['imageUrl'] == '') {
+                                  return Text('No Image Selected');
+                                } else if (_initValues['imageUrl'].isNotEmpty) {
+                                  return FittedBox(
+                                    child: Image.network(
+                                      _initValues['imageUrl'].toString(),
+                                      fit: BoxFit.cover,
                                     ),
+                                  );
+                                } else {
+                                  return Image.file(image);
+                                }
+                              }),
                             ),
-                            Expanded(
-                              child: FlatButton.icon(
-                                icon: Icon(Icons.camera),
-                                label: Text('Take a Picture'),
-                                onPressed: _takePicture,
-                              ),
-                              // child: TextFormField(
-                              //   decoration: const InputDecoration(
-                              //     icon: Icon(Icons.camera_alt),
-                              //     labelText: 'Image Url',
-                              //   ),
-                              //   keyboardType: TextInputType.url,
-                              //   textInputAction: TextInputAction.done,
-                              //   controller: _imageUrlController,
-                              //   focusNode: _imageUrlFocusNode,
-                              //   onFieldSubmitted: (_) {
-                              //     _saveForm();
-                              //   },
-                              //   onSaved: (value) {
-                              //     _editedProduct = Product(
-                              //         id: _editedProduct.id,
-                              //         name: _editedProduct.name,
-                              //         description: _editedProduct.description,
-                              //         price: _editedProduct.price,
-                              //         rating: _editedProduct.rating,
-                              //         imageUrl: value,
-                              //         idRestaurant: _editedProduct.idRestaurant);
-                              //   },
-                              // ),
+                            Column(
+                              children: [
+                                Container(
+                                  child: FlatButton.icon(
+                                    icon: Icon(Icons.photo),
+                                    label: Text('Select a Picture'),
+                                    onPressed: _selectPicture,
+                                  ),
+                                ),
+                                Container(
+                                  child: FlatButton.icon(
+                                    icon: Icon(Icons.camera),
+                                    label: Text('Take a Picture'),
+                                    onPressed: _takePicture,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
