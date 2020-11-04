@@ -288,15 +288,15 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                                 if (image == null &&
                                     _initValues['imageUrl'] == '') {
                                   return Text('No Image Selected');
-                                } else if (_initValues['imageUrl'].isNotEmpty) {
+                                } else if (image != null) {
+                                  return Image.file(image);
+                                } else {
                                   return FittedBox(
                                     child: Image.network(
                                       _initValues['imageUrl'].toString(),
                                       fit: BoxFit.cover,
                                     ),
                                   );
-                                } else {
-                                  return Image.file(image);
                                 }
                               }),
                             ),
