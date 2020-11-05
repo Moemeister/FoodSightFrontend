@@ -44,6 +44,7 @@ class RestaurantInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context).size;
     final String idRestaurant =
         ModalRoute.of(context).settings.arguments as String;
     final restaurantsData = Provider.of<Restaurants>(context);
@@ -96,8 +97,9 @@ class RestaurantInformation extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Description:",
@@ -108,9 +110,13 @@ class RestaurantInformation extends StatelessWidget {
                                               Theme.of(context).accentColor,
                                         ),
                                       ),
-                                      Text(" ${restaurant.description}",
-                                          style: TextStyle(fontSize: 20),
-                                          overflow: TextOverflow.visible),
+                                      Container(
+                                        width: mediaQuery.width - 65,
+                                        child: Text(
+                                            "${restaurant.description} asklfjdalksjdlaksd lkasdlasdljasl kdjaslkdjalksjdlaksjdlkajsdlkasjdlk",
+                                            style: TextStyle(fontSize: 20),
+                                            overflow: TextOverflow.visible),
+                                      ),
                                     ],
                                   ),
                                 ],
