@@ -112,8 +112,7 @@ class RestaurantInformation extends StatelessWidget {
                                       ),
                                       Container(
                                         width: mediaQuery.width - 65,
-                                        child: Text(
-                                            "${restaurant.description} asklfjdalksjdlaksd lkasdlasdljasl kdjaslkdjalksjdlaksjdlkajsdlkasjdlk",
+                                        child: Text("${restaurant.description}",
                                             style: TextStyle(fontSize: 20),
                                             overflow: TextOverflow.visible),
                                       ),
