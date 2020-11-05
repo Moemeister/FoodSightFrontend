@@ -61,15 +61,61 @@ class RestaurantItem extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Positioned(
+                    right: 5,
+                    bottom: 5,
+                    child: Container(
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.all(Radius.circular(35)),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.favorite_border),
+                        onPressed: () {}, //TODO add to favorite for user
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Row(
                       children: <Widget>[
+                        FlatButton(
+                          onPressed: () {}, //TODO Show a dialog, to vote rating
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                singleRestaurant.rating.toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 3,
+                          height: 30,
+                          decoration: BoxDecoration(color: Colors.black),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Icon(Icons.fastfood),
                         SizedBox(
                           width: 5,
@@ -80,6 +126,14 @@ class RestaurantItem extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          width: 3,
+                          height: 30,
+                          decoration: BoxDecoration(color: Colors.black),
                         ),
                         SizedBox(
                           width: 5,
