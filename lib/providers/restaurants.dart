@@ -74,6 +74,13 @@ class Restaurants with ChangeNotifier {
             .toList();
   }
 
+  List<Restaurant> getListByNameSearch(String value) {
+    return _items
+        .where((element) =>
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+  }
+
   Restaurant findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }

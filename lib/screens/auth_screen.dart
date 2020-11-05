@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:FoodSight/screens/restaurants_screen.dart';
 import 'package:FoodSight/screens/user_form_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/auth.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,7 @@ class _AuthCardState extends State<AuthCard> {
         } else {
           await Provider.of<Auth>(context, listen: false)
               .signInUsr(_authData['email'], _authData['password']);
-              Fluttertoast.showToast(
+          Fluttertoast.showToast(
               msg: "Welcome",
               toastLength: Toast.LENGTH_LONG,
               backgroundColor: Theme.of(context).accentColor,
@@ -199,8 +200,13 @@ class _AuthCardState extends State<AuthCard> {
     Navigator.of(context).pushNamed(RestaurantFormScreen.routeName);
   }
 
-  void _forgotPass() {
-
+  void _forgotPass() async {
+    const url = 'https://foodsight-api.herokuapp.com/reset/forgot';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void _newUser() {

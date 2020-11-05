@@ -19,6 +19,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   SearchBar searchBar;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   var _isLoading = false;
+  var _searchValue = "null";
 
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
@@ -59,9 +60,10 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     );
   }
 
-  void onSubmitted(String value) {
-    setState(() => _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text('You wrote $value!'))));
+  void valueChanged(String value) {
+    setState(() {
+      _searchValue = value;
+    });
   }
 
   _RestaurantsScreenState() {
@@ -69,12 +71,23 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
         inBar: false,
         buildDefaultAppBar: buildAppBar,
         setState: setState,
-        onSubmitted: onSubmitted,
+        onChanged: valueChanged,
+        onSubmitted: (_) {
+          setState(() {
+            _searchValue = "null";
+          });
+        },
         onCleared: () {
-          print("cleared");
+          setState(() {
+            _searchValue = "null";
+          });
+          print("Search Bar cleared");
         },
         onClosed: () {
-          print("closed");
+          setState(() {
+            _searchValue = "null";
+          });
+          print("Search Bar closed");
         });
   }
 
@@ -176,7 +189,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : RestaurantListView(_selectedPriceCategory),
+          : RestaurantListView(_selectedPriceCategory, _searchValue),
     );
   }
 }
