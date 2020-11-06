@@ -1,6 +1,6 @@
-import 'package:FoodSight/providers/userLists.dart';
-import 'package:FoodSight/screens/auth_screen.dart';
-import 'package:FoodSight/screens/user_form_screen.dart';
+import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
+import './screens/user_form_screen.dart';
 
 import './providers/products.dart';
 import './screens/product_form_screen.dart';
@@ -15,7 +15,7 @@ import './screens/restaurant_detail.dart';
 import './screens/restaurant_info.dart';
 import './providers/restaurants.dart';
 import 'providers/auth.dart';
-import 'providers/userLists.dart';
+import 'providers/userRestaurants.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -53,13 +53,16 @@ class FoodSight extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Products>(
           create: (ctx) => Products(null, []),
           update: (ctx, auth, previousProducts) => Products(
-            auth.logId,
+            auth.logId == null ? null : auth.logId,
             previousProducts == null ? [] : previousProducts.items,
           ),
         ),
-        ChangeNotifierProxyProvider<Auth, UserLists>(
-          create: (ctx) => UserLists(null),
-          update: (ctx, auth, _) => UserLists(auth.logId),
+        ChangeNotifierProxyProvider<Auth, UserRestaurants>(
+          create: (ctx) => UserRestaurants(null, []),
+          update: (ctx, auth, previousData) => UserRestaurants(
+            auth.logId == null ? null : auth.logId,
+            previousData == null ? [] : previousData.favRestaurants,
+          ),
         ),
       ],
       child: Consumer<Auth>(
@@ -89,7 +92,14 @@ class FoodSight extends StatelessWidget {
                 ),
           ),
           routes: {
-            '/': (context) => RestaurantsScreen(),
+            '/': (context) => FutureBuilder(
+                  future: authData.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : RestaurantsScreen(),
+                ),
             RestaurantDetail.routeName: (context) => RestaurantDetail(),
             RestaurantInformation.routeName: (context) =>
                 RestaurantInformation(),

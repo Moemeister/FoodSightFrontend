@@ -1,6 +1,8 @@
-import 'package:FoodSight/screens/auth_screen.dart';
-import 'package:FoodSight/screens/product_form_screen.dart';
-import 'package:FoodSight/screens/restaurant_form_screen.dart';
+import '../providers/auth.dart';
+import '../screens/auth_screen.dart';
+import '../screens/product_form_screen.dart';
+import '../screens/restaurant_form_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -72,6 +74,16 @@ class MainDrawer extends StatelessWidget {
           Icons.lightbulb_outline,
           () {
             Navigator.of(context).pushNamed(AuthScreen.routeName);
+          },
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(Icons.logout),
+          title: Text('Logout'),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacementNamed('/');
+            Provider.of<Auth>(context, listen: false).logout();
           },
         ),
       ],

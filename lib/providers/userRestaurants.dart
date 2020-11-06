@@ -3,25 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class UserLists with ChangeNotifier {
+class UserRestaurants with ChangeNotifier {
   final String authId;
-  UserLists(this.authId);
-
   List<String> _restaurantsId = [];
-  List<String> _productsId = [];
+  UserRestaurants(this.authId, this._restaurantsId);
 
   Future<void> fetchUserFavRestaurants() async {
-    const url = 'https://foodsight-api.herokuapp.com/test/favoriteProducts';
+    const url = 'https://foodsight-api.herokuapp.com/test/favoriteRestaurant';
 
     try {
       final response = await http.post(
         url,
         body: {
-          "_id": "5f9381edd4f0ce29b861682f",
+          "_id": authId,
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "_id": "5f9381edd4f0ce29b861682f",
+          "_id": authId,
         },
       );
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -29,7 +27,6 @@ class UserLists with ChangeNotifier {
       extractedData.forEach((key, value) {
         _restaurantsId.add(value);
       });
-
       notifyListeners();
     } catch (e) {
       print(e);
@@ -38,5 +35,13 @@ class UserLists with ChangeNotifier {
 
   List<String> get favRestaurants {
     return [..._restaurantsId];
+  }
+
+  bool isPartOfFavRest(String id) {
+    if (_restaurantsId.contains(id)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

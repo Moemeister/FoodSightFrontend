@@ -3,15 +3,23 @@ import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
 import '../screens/restaurant_detail.dart';
 import '../screens/restaurant_form_screen.dart';
+import '../providers/userRestaurants.dart';
+import '../providers/auth.dart';
 
 class RestaurantItem extends StatelessWidget {
   void selectedRestaurant(BuildContext ctx, String id) {
     Navigator.of(ctx).pushNamed(RestaurantDetail.routeName, arguments: id);
   }
 
+  void _addToFavorite() {}
+
   @override
   Widget build(BuildContext context) {
     final singleRestaurant = Provider.of<Restaurant>(context, listen: false);
+    bool isFav;
+    isFav = Provider.of<UserRestaurants>(context)
+        .isPartOfFavRest(singleRestaurant.id);
+    bool isLoggedIn = Provider.of<Auth>(context).logId == null ? false : true;
     return Container(
       child: InkWell(
         onTap: () => selectedRestaurant(context, singleRestaurant.id),
@@ -61,22 +69,25 @@ class RestaurantItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: 5,
-                    bottom: 5,
-                    child: Container(
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.all(Radius.circular(35)),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.favorite_border),
-                        onPressed: () {}, //TODO add to favorite for user
-                        color: Theme.of(context).primaryColor,
+                  if (isLoggedIn)
+                    Positioned(
+                      right: 5,
+                      bottom: 5,
+                      child: Container(
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.all(Radius.circular(35)),
+                        ),
+                        child: IconButton(
+                          icon: isFav
+                              ? Icon(Icons.favorite)
+                              : Icon(Icons.favorite_border),
+                          onPressed: _addToFavorite,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
               Padding(
