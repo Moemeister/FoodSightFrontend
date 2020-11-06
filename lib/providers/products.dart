@@ -66,7 +66,7 @@ class Products with ChangeNotifier {
   }
 
   List<Product> get items {
-    print('SOY UN ID EXTRAIDO DE LA RESPUESTA DEL LOGIN $authId');
+    //print('SOY UN ID EXTRAIDO DE LA RESPUESTA DEL LOGIN $authId');
     return [..._items];
   }
 

@@ -1,5 +1,6 @@
-import 'package:FoodSight/screens/auth_screen.dart';
-import 'package:FoodSight/screens/user_form_screen.dart';
+import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
+import './screens/user_form_screen.dart';
 
 import './providers/products.dart';
 import './screens/product_form_screen.dart';
@@ -51,7 +52,7 @@ class FoodSight extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Products>(
           create: (ctx) => Products(null, []),
           update: (ctx, auth, previousProducts) => Products(
-            auth.logId,
+            auth.logId == null ? null : auth.logId,
             previousProducts == null ? [] : previousProducts.items,
           ),
         ),
@@ -83,14 +84,21 @@ class FoodSight extends StatelessWidget {
                 ),
           ),
           routes: {
-            '/': (context) => RestaurantsScreen(),
+            '/': (context) => FutureBuilder(
+                  future: authData.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : RestaurantsScreen(),
+                ),
             RestaurantDetail.routeName: (context) => RestaurantDetail(),
             RestaurantInformation.routeName: (context) =>
                 RestaurantInformation(),
             RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
             ProductFormScreen.routeName: (context) => ProductFormScreen(),
             AuthScreen.routeName: (context) => AuthScreen(),
-            UserSignupScreen.routeName : (context) => UserSignupScreen(),
+            UserSignupScreen.routeName: (context) => UserSignupScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),
