@@ -1,3 +1,4 @@
+import 'package:FoodSight/providers/userLists.dart';
 import 'package:FoodSight/screens/auth_screen.dart';
 import 'package:FoodSight/screens/user_form_screen.dart';
 
@@ -14,6 +15,7 @@ import './screens/restaurant_detail.dart';
 import './screens/restaurant_info.dart';
 import './providers/restaurants.dart';
 import 'providers/auth.dart';
+import 'providers/userLists.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -55,6 +57,10 @@ class FoodSight extends StatelessWidget {
             previousProducts == null ? [] : previousProducts.items,
           ),
         ),
+        ChangeNotifierProxyProvider<Auth, UserLists>(
+          create: (ctx) => UserLists(null),
+          update: (ctx, auth, _) => UserLists(auth.logId),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, authData, _) => MaterialApp(
@@ -90,7 +96,7 @@ class FoodSight extends StatelessWidget {
             RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
             ProductFormScreen.routeName: (context) => ProductFormScreen(),
             AuthScreen.routeName: (context) => AuthScreen(),
-            UserSignupScreen.routeName : (context) => UserSignupScreen(),
+            UserSignupScreen.routeName: (context) => UserSignupScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),
