@@ -1,10 +1,12 @@
 import 'package:FoodSight/providers/products.dart';
 
+import 'dart:io';
 import '../models/restaurant.dart';
 import '../providers/restaurants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RestaurantFormScreen extends StatefulWidget {
   static const routeName = '/restaurantFormScreen';
@@ -76,7 +78,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
           'name': _editedRestaurant.name,
           'password': _editedRestaurant.password,
           'phone': _editedRestaurant.phone,
-          'photoUrl': '',
+          'photoUrl': _editedRestaurant.photoUrl,
         };
         _imageUrlController.text = _editedRestaurant.photoUrl;
       }
@@ -102,6 +104,32 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
     }
   }
 
+  File image;
+
+  Future<void> _takePicture() async {
+    var imageFile = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 600,
+    );
+    if (imageFile != null) {
+      setState(() {
+        image = imageFile;
+      });
+    }
+  }
+
+  Future<void> _selectPicture() async {
+    var imageFile = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 600,
+    );
+    if (imageFile != null) {
+      setState(() {
+        image = imageFile;
+      });
+    }
+  }
+
   Future<void> _saveForm() async {
     if (_formKey.currentState.validate()) {
       Fluttertoast.showToast(
@@ -115,7 +143,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
       });
       if (_editedRestaurant.id != null) {
         await Provider.of<Restaurants>(context, listen: false)
-            .updateRestaurant(_editedRestaurant.id, _editedRestaurant);
+            .updateRestaurant(_editedRestaurant.id, _editedRestaurant, image);
         setState(() {
           _isloading = false;
         });
@@ -123,7 +151,13 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
       } else {
         try {
           await Provider.of<Restaurants>(context, listen: false)
-              .addRestaurant(_editedRestaurant);
+              .addRestaurant(_editedRestaurant, image)
+              .then((_) {
+            setState(() {
+              _isloading = false;
+            });
+            Navigator.of(context).popAndPushNamed('/');
+          });
         } catch (error) {
           await showDialog(
             context: context,
@@ -422,7 +456,8 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                         ),
                         //photo
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
                               width: 100,
@@ -437,47 +472,39 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              child: _imageUrlController.text.isEmpty
-                                  ? Text('Enter URL')
-                                  : FittedBox(
-                                      child: Image.network(
-                                        _imageUrlController.text,
-                                        fit: BoxFit.cover,
-                                      ),
+                              child: Builder(builder: (context) {
+                                if (image == null &&
+                                    _initValues['photoUrl'] == '') {
+                                  return Text('No Image Selected');
+                                } else if (image != null) {
+                                  return Image.file(image);
+                                } else {
+                                  return FittedBox(
+                                    child: Image.network(
+                                      _initValues['photoUrl'].toString(),
+                                      fit: BoxFit.cover,
                                     ),
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  icon: Icon(Icons.camera_alt),
-                                  labelText: 'Image Url',
-                                ),
-                                keyboardType: TextInputType.url,
-                                textInputAction: TextInputAction.done,
-                                controller: _imageUrlController,
-                                focusNode: _imageUrlFocusNode,
-                                onFieldSubmitted: (_) {
-                                  _saveForm();
-                                },
-                                onSaved: (value) {
-                                  _editedRestaurant = Restaurant(
-                                    id: _editedRestaurant.id,
-                                    address: _editedRestaurant.address,
-                                    description: _editedRestaurant.description,
-                                    email: _editedRestaurant.email,
-                                    fbUrl: _editedRestaurant.fbUrl,
-                                    rating: _editedRestaurant.rating,
-                                    instaUrl: _editedRestaurant.instaUrl,
-                                    location: _editedRestaurant.location,
-                                    name: _editedRestaurant.name,
-                                    password: _editedRestaurant.password,
-                                    phone: _editedRestaurant.phone,
-                                    photoUrl: value,
-                                    priceCategory:
-                                        _editedRestaurant.priceCategory,
                                   );
-                                },
-                              ),
+                                }
+                              }),
+                            ),
+                            Column(
+                              children: [
+                                Container(
+                                  child: FlatButton.icon(
+                                    icon: Icon(Icons.photo),
+                                    label: Text('Select a Picture'),
+                                    onPressed: _selectPicture,
+                                  ),
+                                ),
+                                Container(
+                                  child: FlatButton.icon(
+                                    icon: Icon(Icons.camera),
+                                    label: Text('Take a Picture'),
+                                    onPressed: _takePicture,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
