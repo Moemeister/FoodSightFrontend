@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+//TODO: hacer que los mapas se actualicen según el cardview
+
 class MapRestaurantLocation extends StatefulWidget {
   final String locationCoords;
 
@@ -15,15 +17,15 @@ class MapRestaurantLocation extends StatefulWidget {
 
 class MapRestaurantLocationState extends State<MapRestaurantLocation> {
   final String coords;
-  static String static_coords;
+  static String staticCoords;
 
   MapRestaurantLocationState(this.coords) {
-    static_coords = coords;
+    staticCoords = coords;
   }
 
   Completer<GoogleMapController> _controller = Completer();
 
-  static var latlong = static_coords.split(",");
+  static var latlong = staticCoords.split(",");
 
   static double lat = double.parse(latlong[0]);
   static double long = double.parse(latlong[1]);
@@ -38,6 +40,7 @@ class MapRestaurantLocationState extends State<MapRestaurantLocation> {
   }
 
   void setCustomMapPin() async {
+    //TODO: Usar icono mas grande
     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/icons/icons8-next-location-24.png');

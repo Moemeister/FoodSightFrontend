@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'dart:convert';
 import '../models/restaurant.dart';
+import 'package:http_parser/http_parser.dart';
 
 class Restaurants with ChangeNotifier {
   // List<Restaurant> _items = [
@@ -85,27 +87,39 @@ class Restaurants with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> addRestaurant(Restaurant restaurant) async {
+  Future<void> addRestaurant(Restaurant restaurant, File image) async {
     const url = 'https://foodsight-api.herokuapp.com/api/auth/signup';
+    Dio dio = new Dio();
+    print("********** RUTA DE FOTO: " + image.toString());
     try {
-      final response = await http.post(
+      String filename = image.path.split('/').last;
+      FormData formData = new FormData.fromMap({
+        'name': restaurant.name,
+        'email': restaurant.email,
+        'password': restaurant.password,
+        'description': restaurant.description,
+        'phone': restaurant.phone,
+        'rating': 5,
+        'facebook': restaurant.fbUrl,
+        'instagram': restaurant.instaUrl,
+        'photo': await MultipartFile.fromFile(image.path,
+            filename: filename, contentType: MediaType('image', 'jpg')),
+      });
+      Response response = await dio.post(
         url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          'name': restaurant.name,
-          'email': restaurant.email,
-          'password': restaurant.password,
-          'description': restaurant.description,
-          'phone': restaurant.phone,
-          'rating': 5,
-          'photo': restaurant.photoUrl,
-          'facebook': restaurant.fbUrl,
-          'instagram': restaurant.instaUrl
-        }),
+        data: formData,
+        options: Options(
+          headers: {
+            //"Content-Type": "multipart/form-data",
+            //"_id": '$authId',
+            //"_id": "5f972850e5f83c001786715c",
+          },
+        ),
       );
-      print(response.body);
+
+      print('buenas  tardes' + response.data['photo'].toString());
       final newRestaurant = Restaurant(
-        id: json.decode(response.body)['id'],
+        id: response.data['id'],
         address: restaurant.address,
         description: restaurant.description,
         email: restaurant.email,
@@ -116,7 +130,7 @@ class Restaurants with ChangeNotifier {
         name: restaurant.name,
         password: restaurant.password,
         phone: restaurant.phone,
-        photoUrl: restaurant.photoUrl,
+        photoUrl: response.data['photo'].toString(),
       );
       _items.add(newRestaurant);
       notifyListeners();
@@ -126,29 +140,45 @@ class Restaurants with ChangeNotifier {
     }
   }
 
-  Future<void> updateRestaurant(String id, Restaurant newRestaurant) async {
+  Future<void> updateRestaurant(
+      String id, Restaurant newRestaurant, File image) async {
     final resIndex = _items.indexWhere((res) => res.id == id);
-
+    const url = 'https://foodsight-api.herokuapp.com/api/restaurant/update';
+    Dio dio = new Dio();
+    String filename = 'test';
     if (resIndex >= 0) {
-      const url = 'https://foodsight-api.herokuapp.com/api/restaurant/update';
       try {
-        final response = await http.put(
+        if (image != null) {
+          filename = image.path.split('/').last;
+        }
+        FormData formData = new FormData.fromMap({
+          '_id': id,
+          'name': newRestaurant.name,
+          'email': newRestaurant.email,
+          'password': newRestaurant.password,
+          'description': newRestaurant.description,
+          'phone': newRestaurant.phone,
+          'rating': newRestaurant.rating,
+          'facebook': newRestaurant.fbUrl,
+          'instagram': newRestaurant.instaUrl,
+          'photo': image == null
+              ? newRestaurant.photoUrl
+              : await MultipartFile.fromFile(image.path,
+                  filename: filename, contentType: MediaType('image', 'jpg')),
+        });
+        Response response = await dio.put(
           url,
-          headers: {"Content-Type": "application/json", "_id": id},
-          body: json.encode({
-            '_id': id,
-            'name': newRestaurant.name,
-            'email': newRestaurant.email,
-            'password': newRestaurant.password,
-            'description': newRestaurant.description,
-            'phone': newRestaurant.phone,
-            'rating': newRestaurant.rating,
-            'photo': newRestaurant.photoUrl,
-            'facebook': newRestaurant.fbUrl,
-            'instagram': newRestaurant.instaUrl
-          }),
+          data: formData,
+          options: Options(
+            headers: {
+              //"Content-Type": "multipart/form-data",
+              "_id": id,
+            },
+          ),
         );
+
         //print(response.body);
+        newRestaurant.photoUrl = response.data['photo'].toString();
         _items[resIndex] = newRestaurant;
         notifyListeners();
       } catch (error) {

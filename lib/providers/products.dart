@@ -159,6 +159,7 @@ class Products with ChangeNotifier {
             },
           ),
         );
+        newProduct.imageUrl = response.data['photo'].toString();
         _items[prodIndex] = newProduct;
         notifyListeners();
       } catch (e) {

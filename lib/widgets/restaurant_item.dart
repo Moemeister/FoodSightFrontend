@@ -1,10 +1,13 @@
+import 'package:FoodSight/widgets/star_rate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../models/restaurant.dart';
 import '../screens/restaurant_detail.dart';
 import '../screens/restaurant_form_screen.dart';
 import '../providers/userRestaurants.dart';
 import '../providers/auth.dart';
+import '../widgets/star_rating_stateful.dart';
 
 class RestaurantItem extends StatelessWidget {
   void selectedRestaurant(BuildContext ctx, String id) {
@@ -12,6 +15,44 @@ class RestaurantItem extends StatelessWidget {
   }
 
   void _addToFavorite() {}
+
+  void _rateUsButton(BuildContext ctx, String id, String name, double rating) {
+    print("Estoy en el rate us button");
+    showDialog(
+        context: ctx,
+        builder: (BuildContext ctx) {
+          return new AlertDialog(
+            title:
+                new Text("Rate $name", style: TextStyle(color: Colors.black)),
+            content: Column(
+              children: [
+                Text("Our current rate is:"),
+                Container(
+                  child: StarRate(
+                    value: rating.round(),
+                  ),
+                ),
+                Text("Help us with your rating for us :)"),
+                Container(
+                  child: StatefulStarRating(
+                    rate: 0,
+                    isRestaurant: true,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              new FlatButton(
+                child: Text("Rate!"),
+                onPressed: () {
+                  print("Ya me voy, lup!");
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +139,12 @@ class RestaurantItem extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         FlatButton(
-                          onPressed: () {}, //TODO Show a dialog, to vote rating
+                          onPressed: () => _rateUsButton(
+                              context,
+                              singleRestaurant.id,
+                              singleRestaurant.name,
+                              singleRestaurant.rating),
+                          //TODO Show a dialog, to vote rating
                           child: Row(
                             children: [
                               Icon(
