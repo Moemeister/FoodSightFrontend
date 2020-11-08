@@ -5,7 +5,7 @@ import './star_rating.dart';
 class StatefulStarRating extends StatelessWidget {
   final int rate;
 
-  StatefulStarRating(this.rate);
+  StatefulStarRating({this.rate});
 
   @override
   Widget build(BuildContext context) {

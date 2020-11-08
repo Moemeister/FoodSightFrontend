@@ -1,5 +1,6 @@
 import 'package:FoodSight/providers/products.dart';
 
+import '../widgets/google_map_set_place.dart';
 import '../models/restaurant.dart';
 import '../providers/restaurants.dart';
 import 'package:flutter/material.dart';
@@ -393,7 +394,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                           initialValue: _initValues['fbUrl'],
                           decoration: const InputDecoration(
                             icon: Icon(Icons.alternate_email),
-                            hintText: 'Adjunta tu link de Instagra,',
+                            hintText: 'Adjunta tu link de Instagram',
                             labelText: 'Instagram url',
                           ),
                           onFieldSubmitted: (value) {
@@ -420,6 +421,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                             );
                           },
                         ),
+                        //location
                         //photo
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,

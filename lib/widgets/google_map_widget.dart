@@ -15,15 +15,15 @@ class MapRestaurantLocation extends StatefulWidget {
 
 class MapRestaurantLocationState extends State<MapRestaurantLocation> {
   final String coords;
-  static String static_coords;
+  static String staticCoords;
 
   MapRestaurantLocationState(this.coords) {
-    static_coords = coords;
+    staticCoords = coords;
   }
 
   Completer<GoogleMapController> _controller = Completer();
 
-  static var latlong = static_coords.split(",");
+  static var latlong = staticCoords.split(",");
 
   static double lat = double.parse(latlong[0]);
   static double long = double.parse(latlong[1]);

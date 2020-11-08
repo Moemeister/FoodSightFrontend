@@ -269,7 +269,7 @@ class RestaurantInformation extends StatelessWidget {
                                   Container(
                                     margin: EdgeInsets.only(left: 10),
                                     child: StatefulStarRating(
-                                      restaurant.rating.round(),
+                                      rate: restaurant.rating.round(),
                                     ),
                                   ),
                                 ],
