@@ -152,16 +152,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       } else {
         //Dynamic calculation of rating, based on products of the restaurants.
         print("Setting Price Categories 2");
-        setState(() {
-          _isLoading = true;
-        });
-        Provider.of<UserRestaurants>(context, listen: false)
-            .fetchUserFavRestaurants()
-            .then((_) => {
-                  setState(() {
-                    _isLoading = false;
-                  })
-                });
         List<Restaurant> restaurants;
         restaurants = Provider.of<Restaurants>(context, listen: false).items;
         List<Product> products;
