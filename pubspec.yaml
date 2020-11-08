@@ -43,6 +43,7 @@ dev_dependencies:
   google_maps_flutter: ^1.0.4
   dio: ^3.0.10
   shared_preferences: ^0.5.12+4
+  location: ^3.0.2
 
 
 

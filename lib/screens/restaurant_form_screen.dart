@@ -1,4 +1,4 @@
-import 'package:FoodSight/providers/products.dart';
+import '../widgets/location_input.dart';
 
 import '../models/restaurant.dart';
 import '../providers/restaurants.dart';
@@ -393,7 +393,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                           initialValue: _initValues['fbUrl'],
                           decoration: const InputDecoration(
                             icon: Icon(Icons.alternate_email),
-                            hintText: 'Adjunta tu link de Instagra,',
+                            hintText: 'Adjunta tu link de Instagram',
                             labelText: 'Instagram url',
                           ),
                           onFieldSubmitted: (value) {
@@ -481,6 +481,11 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                             ),
                           ],
                         ),
+                        //location
+                        SizedBox(
+                          height: 10,
+                        ),
+                        LocationInput(),
                       ],
                     ),
                   ),
