@@ -36,7 +36,7 @@ class RestaurantItem extends StatelessWidget {
                 Container(
                   child: StatefulStarRating(
                     rate: 0,
-                    isRestaurant: false,
+                    isRestaurant: true,
                   ),
                 ),
               ],
