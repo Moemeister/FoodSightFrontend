@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/restaurants.dart';
-import '../widgets/star_rating.dart';
+import '../widgets/star_rate.dart';
 
 class RestaurantInformation extends StatelessWidget {
   static final String routeName = "/restaurant-information";
@@ -139,8 +139,8 @@ class RestaurantInformation extends StatelessWidget {
                                 )),
                             Container(
                               child: MapRestaurantLocation(restaurant.location),
-                              //   child: MapRestaurantLocation(
-                              //       "13.6789672,-89.2418977"),
+                              /*child: MapRestaurantLocation(
+                                  "13.6789672,-89.2418977"),*/
                             ),
                             Container(
                               margin: EdgeInsets.only(
@@ -163,6 +163,7 @@ class RestaurantInformation extends StatelessWidget {
                                     margin: EdgeInsets.only(
                                       left: 10,
                                     ),
+                                    //TODO: usar iconos mas grandes
                                     child: Row(
                                       children: [
                                         InkWell(
@@ -209,7 +210,7 @@ class RestaurantInformation extends StatelessWidget {
                                           Theme.of(context).accentColor,
                                     ),
                                   ),
-                                  Text(" ${restaurant.address}",
+                                  Text(" ${restaurant.location}",
                                       style: TextStyle(fontSize: 20)),
                                 ],
                               ),
@@ -268,8 +269,8 @@ class RestaurantInformation extends StatelessWidget {
                                   ),
                                   Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: StatefulStarRating(
-                                      rate: restaurant.rating.round(),
+                                    child: StarRate(
+                                      value: restaurant.rating.round(),
                                     ),
                                   ),
                                 ],
