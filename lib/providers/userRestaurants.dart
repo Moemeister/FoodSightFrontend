@@ -10,7 +10,6 @@ class UserRestaurants with ChangeNotifier {
 
   Future<void> fetchUserFavRestaurants() async {
     const url = 'https://foodsight-api.herokuapp.com/test/favoriteRestaurant';
-
     try {
       final response = await http.post(
         url,
@@ -31,6 +30,7 @@ class UserRestaurants with ChangeNotifier {
     } catch (e) {
       print(e);
     }
+    print(_restaurantsId);
   }
 
   List<String> get favRestaurants {
@@ -42,6 +42,48 @@ class UserRestaurants with ChangeNotifier {
       return true;
     } else {
       return false;
+    }
+  }
+
+  void updateFavRest(String id, bool flag) async {
+    const addFavoriteURL =
+        'https://foodsight-api.herokuapp.com/test/addFavoriteRestaurant';
+    const removeFavoriteURL =
+        'https://foodsight-api.herokuapp.com/test/removeFavoriteRestaurant';
+    try {
+      if (flag) {
+        //Remover Favorito
+        final response = await http.post(
+          removeFavoriteURL,
+          body: {
+            "_restaurantId": id,
+          },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "_id": authId,
+          },
+        );
+        _restaurantsId.remove(id);
+        print(response.body);
+        notifyListeners();
+      } else {
+        //agregar a Favorito
+        final response = await http.post(
+          addFavoriteURL,
+          body: {
+            "restaurantID": id,
+          },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "_id": authId,
+          },
+        );
+        _restaurantsId.add(id);
+        print(response.body);
+        notifyListeners();
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

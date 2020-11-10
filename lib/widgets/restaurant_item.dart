@@ -14,7 +14,9 @@ class RestaurantItem extends StatelessWidget {
     Navigator.of(ctx).pushNamed(RestaurantDetail.routeName, arguments: id);
   }
 
-  void _addToFavorite() {}
+  void _addToFavorite(String id, bool flag, BuildContext ctx) {
+    Provider.of<UserRestaurants>(ctx, listen: false).updateFavRest(id, flag);
+  }
 
   void _rateUsButton(BuildContext ctx, String id, String name, double rating) {
     print("Estoy en el rate us button");
@@ -124,7 +126,9 @@ class RestaurantItem extends StatelessWidget {
                           icon: isFav
                               ? Icon(Icons.favorite)
                               : Icon(Icons.favorite_border),
-                          onPressed: _addToFavorite,
+                          onPressed: () {
+                            _addToFavorite(singleRestaurant.id, isFav, context);
+                          },
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
