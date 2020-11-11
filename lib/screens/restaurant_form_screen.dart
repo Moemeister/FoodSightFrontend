@@ -142,8 +142,8 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
         _isloading = true;
       });
       if (_editedRestaurant.id != null) {
-        await Provider.of<Restaurants>(context, listen: false)
-            .updateRestaurant(_editedRestaurant.id, _editedRestaurant, image);
+        await Provider.of<Restaurants>(context, listen: false).updateRestaurant(
+            _editedRestaurant.id, _editedRestaurant, image, _pickedLocation);
         setState(() {
           _isloading = false;
         });
@@ -151,7 +151,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
       } else {
         try {
           await Provider.of<Restaurants>(context, listen: false)
-              .addRestaurant(_editedRestaurant, image)
+              .addRestaurant(_editedRestaurant, image, _pickedLocation)
               .then((_) {
             setState(() {
               _isloading = false;
@@ -163,7 +163,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
             context: context,
             builder: (context) => AlertDialog(
               title: Text('An error ocurred'),
-              content: Text('Something when wrong'),
+              content: Text('Something when wrong' + error.toString()),
               actions: [
                 FlatButton(
                   child: Text('Okaay'),
@@ -182,6 +182,12 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
         }
       }
     }
+  }
+
+  RestaurantLocation _pickedLocation;
+
+  void _selectResAddress(double lat, double lng) {
+    _pickedLocation = RestaurantLocation(latitude: lat, longitude: lng);
   }
 
   @override
@@ -454,7 +460,6 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                             );
                           },
                         ),
-                        //location
                         //photo
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -513,7 +518,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        LocationInput(),
+                        LocationInput(_selectResAddress),
                       ],
                     ),
                   ),

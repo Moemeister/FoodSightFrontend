@@ -16,7 +16,7 @@ class Auth with ChangeNotifier {
   // }
 
   String get logId {
-    print('ME MANDARON A LLAMAR WEEE ' + _id.toString());
+    //print('ME MANDARON A LLAMAR WEEE ' + _id.toString());
     return _id;
   }
 

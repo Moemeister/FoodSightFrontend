@@ -1,3 +1,4 @@
+import 'package:FoodSight/helpers/location_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -87,10 +88,15 @@ class Restaurants with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> addRestaurant(Restaurant restaurant, File image) async {
+  Future<void> addRestaurant(Restaurant restaurant, File image,
+      RestaurantLocation pickedLocation) async {
+    restaurant.location =
+        '${pickedLocation.latitude},${pickedLocation.longitude}';
     const url = 'https://foodsight-api.herokuapp.com/api/auth/signup';
     Dio dio = new Dio();
     print("********** RUTA DE FOTO: " + image.toString());
+    final address = await LocationHelper.getResAddress(
+        pickedLocation.latitude, pickedLocation.longitude);
     try {
       String filename = image.path.split('/').last;
       FormData formData = new FormData.fromMap({
@@ -99,7 +105,9 @@ class Restaurants with ChangeNotifier {
         'password': restaurant.password,
         'description': restaurant.description,
         'phone': restaurant.phone,
-        'rating': 5,
+        'rating': 0,
+        'address': address,
+        'location': restaurant.location,
         'facebook': restaurant.fbUrl,
         'instagram': restaurant.instaUrl,
         'photo': await MultipartFile.fromFile(image.path,
@@ -140,8 +148,12 @@ class Restaurants with ChangeNotifier {
     }
   }
 
-  Future<void> updateRestaurant(
-      String id, Restaurant newRestaurant, File image) async {
+  Future<void> updateRestaurant(String id, Restaurant newRestaurant, File image,
+      RestaurantLocation pickedLocation) async {
+    newRestaurant.location =
+        '${pickedLocation.latitude},${pickedLocation.longitude}';
+    final address = await LocationHelper.getResAddress(
+        pickedLocation.latitude, pickedLocation.longitude);
     final resIndex = _items.indexWhere((res) => res.id == id);
     const url = 'https://foodsight-api.herokuapp.com/api/restaurant/update';
     Dio dio = new Dio();
@@ -158,6 +170,8 @@ class Restaurants with ChangeNotifier {
           'password': newRestaurant.password,
           'description': newRestaurant.description,
           'phone': newRestaurant.phone,
+          'location': newRestaurant.location,
+          'address': address,
           'rating': newRestaurant.rating,
           'facebook': newRestaurant.fbUrl,
           'instagram': newRestaurant.instaUrl,

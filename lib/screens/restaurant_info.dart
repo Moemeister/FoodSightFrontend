@@ -1,5 +1,7 @@
-import 'package:FoodSight/widgets/google_map_widget.dart';
-import 'package:FoodSight/widgets/star_rating_stateful.dart';
+import '../models/restaurant.dart';
+import '../screens/map_screen.dart';
+
+import '../helpers/location_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,6 +44,17 @@ class RestaurantInformation extends StatelessWidget {
     }
   }
 
+  Future<void> _selectOnMap(ctx, double lat, double long) async {
+    await Navigator.of(ctx).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (ctx) => MapScreen(
+            initialLocation: RestaurantLocation(latitude: lat, longitude: long),
+            isSelecting: false),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
@@ -49,6 +62,11 @@ class RestaurantInformation extends StatelessWidget {
         ModalRoute.of(context).settings.arguments as String;
     final restaurantsData = Provider.of<Restaurants>(context);
     final restaurant = restaurantsData.findById(idRestaurant);
+    final latlong = restaurant.location.split(",");
+    final double lat = double.parse(latlong[0]);
+    final double long = double.parse(latlong[1]);
+    final previewLocationUrl = LocationHelper.generateLocationPreviewImage(
+        latitude: lat, longitud: long);
     return Scaffold(
       appBar: AppBar(
         title: Text("${restaurant.name} Information"),
@@ -137,10 +155,31 @@ class RestaurantInformation extends StatelessWidget {
                                     ),
                                   ],
                                 )),
-                            Container(
-                              child: MapRestaurantLocation(restaurant.location),
-                              /*child: MapRestaurantLocation(
-                                  "13.6789672,-89.2418977"),*/
+                            InkWell(
+                              onTap: () {
+                                _selectOnMap(context, lat, long);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                height: 170,
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                child: previewLocationUrl == null
+                                    ? Text(
+                                        'No location Chosen',
+                                        textAlign: TextAlign.center,
+                                      )
+                                    : Image.network(
+                                        previewLocationUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(
@@ -198,22 +237,23 @@ class RestaurantInformation extends StatelessWidget {
                             ),
                             Container(
                               margin: EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Address:",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      backgroundColor:
-                                          Theme.of(context).accentColor,
-                                    ),
-                                  ),
-                                  Text(" ${restaurant.location}",
-                                      style: TextStyle(fontSize: 20)),
-                                ],
+                              width: mediaQuery.width - 65,
+                              child: Text(
+                                "Address:",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  backgroundColor:
+                                      Theme.of(context).accentColor,
+                                ),
                               ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(10),
+                              width: mediaQuery.width - 65,
+                              child: Text("${restaurant.address}",
+                                  style: TextStyle(fontSize: 20),
+                                  overflow: TextOverflow.visible),
                             ),
                             Container(
                               margin: EdgeInsets.all(10),

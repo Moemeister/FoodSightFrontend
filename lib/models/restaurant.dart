@@ -7,6 +7,15 @@ enum PriceCategory {
   Luxurious,
 }
 
+class RestaurantLocation {
+  final double latitude;
+  final double longitude;
+  final String address;
+
+  const RestaurantLocation(
+      {@required this.latitude, @required this.longitude, this.address});
+}
+
 class Restaurant with ChangeNotifier {
   String id;
   String name;
@@ -43,6 +52,7 @@ class Restaurant with ChangeNotifier {
     email = json['email'];
     password = json['hashedPassword'];
     description = json['description'];
+    address = json['address'];
     phone = json['phone'];
     rating = json['rating'] + .0;
     photoUrl = json['photo'];
