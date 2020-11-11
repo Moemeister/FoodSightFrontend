@@ -1,3 +1,4 @@
+import 'package:FoodSight/providers/products.dart';
 import 'package:FoodSight/screens/product_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,10 @@ import '../models/product.dart';
 import '../screens/restaurant_detail.dart';
 
 class ProductItem extends StatelessWidget {
+  void _deleteProduct(String id, BuildContext ctx) {
+    Provider.of<Products>(ctx, listen: false).deleteProduct(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     //final String idRestaurant =
@@ -71,6 +76,13 @@ class ProductItem extends StatelessWidget {
                             Navigator.of(context).pushNamed(
                                 ProductFormScreen.routeName,
                                 arguments: singleProduct.id);
+                          },
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            _deleteProduct(singleProduct.id, context);
                           },
                           color: Theme.of(context).primaryColor,
                         ),

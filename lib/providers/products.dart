@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -165,6 +166,32 @@ class Products with ChangeNotifier {
       } catch (e) {
         print(e);
       }
+    }
+  }
+
+  Future<void> deleteProduct(String id) async {
+    const url = "https://foodsight-api.herokuapp.com/api/product/";
+    //const url = "http://192.168.1.6:3000/api/product/";
+    final prodIndex = _items.indexWhere((element) => element.id == id);
+    Dio dio = new Dio();
+
+    try {
+      Response response = await dio.delete(
+        url,
+        data: {'_id': id},
+        options: Options(
+          headers: {
+            // "Content-Type": "application/x-www-form-urlencoded",
+            //HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded',
+            "_id": "$authId",
+          },
+        ),
+      );
+      
+      _items.removeAt(prodIndex);
+      notifyListeners();
+    } on DioError catch (e) {
+      print(e.response.data);
     }
   }
 }
