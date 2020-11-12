@@ -9,6 +9,7 @@ import '../models/restaurant.dart';
 import '../models/product.dart';
 import '../providers/restaurants.dart';
 import '../providers/products.dart';
+import '../providers/auth.dart';
 import 'package:provider/provider.dart';
 
 class RestaurantsScreen extends StatefulWidget {
@@ -95,9 +96,17 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
   PriceCategory _selectedPriceCategory = PriceCategory.All;
 
   var _isInit = true;
+  var _isLoggedIn = false;
+  var _handyFlag = false;
 
   @override
   void didChangeDependencies() {
+    if (Provider.of<Auth>(context).logId != null) {
+      _isLoggedIn = true;
+    }
+    if (Provider.of<UserRestaurants>(context).favRestaurants.isEmpty) {
+      _handyFlag = true;
+    }
     if (_isInit) {
       if (Provider.of<Restaurants>(context).items.isEmpty ||
           Provider.of<Products>(context).items.isEmpty) {
@@ -152,6 +161,20 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       } else {
         //Dynamic calculation of rating, based on products of the restaurants.
         print("Setting Price Categories 2");
+        if (_isLoggedIn && _handyFlag) {
+          setState(() {
+            _isLoading = true;
+          });
+          Provider.of<UserRestaurants>(context, listen: false)
+              .fetchUserFavRestaurants()
+              .then((_) => {
+                    Provider.of<UserRestaurants>(context, listen: false)
+                        .cleanList(),
+                    setState(() {
+                      _isLoading = false;
+                    })
+                  });
+        }
         List<Restaurant> restaurants;
         restaurants = Provider.of<Restaurants>(context, listen: false).items;
         List<Product> products;

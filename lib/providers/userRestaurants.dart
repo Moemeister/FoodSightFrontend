@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class UserRestaurants with ChangeNotifier {
   final String authId;
-  List<String> _restaurantsId = [];
+  List<String> _restaurantsId;
   UserRestaurants(this.authId, this._restaurantsId);
 
   Future<void> fetchUserFavRestaurants() async {
@@ -30,11 +30,19 @@ class UserRestaurants with ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    print(_restaurantsId);
   }
 
   List<String> get favRestaurants {
     return [..._restaurantsId];
+  }
+
+  void cleanList() {
+    var distinctIds = [
+      ...{..._restaurantsId}
+    ];
+    _restaurantsId.clear();
+    _restaurantsId = distinctIds;
+    print(_restaurantsId);
   }
 
   bool isPartOfFavRest(String id) {
