@@ -187,11 +187,19 @@ class Products with ChangeNotifier {
           },
         ),
       );
-      
+
       _items.removeAt(prodIndex);
       notifyListeners();
     } on DioError catch (e) {
       print(e.response.data);
     }
+  }
+
+  List<Product> getListByNameSearch(String id, String value) {
+    return _items
+        .where((element) =>
+            element.idRestaurant == id &&
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
   }
 }

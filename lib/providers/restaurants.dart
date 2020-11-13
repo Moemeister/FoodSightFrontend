@@ -84,6 +84,18 @@ class Restaurants with ChangeNotifier {
         .toList();
   }
 
+  List<Restaurant> getFavRestaurantList(List<String> ids) {
+    return _items.where((element) => ids.contains(element.id)).toList();
+  }
+
+  List<Restaurant> getFavListByNameSearch(List<String> ids, String value) {
+    return _items
+        .where((element) =>
+            ids.contains(element.id) &&
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+  }
+
   Restaurant findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }

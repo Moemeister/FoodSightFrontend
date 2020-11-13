@@ -16,6 +16,7 @@ import './screens/restaurant_info.dart';
 import './providers/restaurants.dart';
 import 'providers/auth.dart';
 import 'providers/userRestaurants.dart';
+import './screens/fav_restaurants_screen.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -107,6 +108,7 @@ class FoodSight extends StatelessWidget {
             ProductFormScreen.routeName: (context) => ProductFormScreen(),
             AuthScreen.routeName: (context) => AuthScreen(),
             UserSignupScreen.routeName: (context) => UserSignupScreen(),
+            FavRestaurantsScreen.routeName: (context) => FavRestaurantsScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),
