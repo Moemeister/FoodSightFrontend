@@ -1,13 +1,19 @@
 import 'package:FoodSight/providers/products.dart';
-import 'package:FoodSight/screens/product_form_screen.dart';
+import '../providers/userProducts.dart';
+import '../screens/product_form_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../screens/restaurant_detail.dart';
+import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   void _deleteProduct(String id, BuildContext ctx) {
     Provider.of<Products>(ctx, listen: false).deleteProduct(id);
+  }
+
+  void _addToFavorite(String id, bool flag, BuildContext ctx) {
+    Provider.of<UserProducts>(ctx, listen: false).updateFavProduct(id, flag);
   }
 
   @override
@@ -15,6 +21,10 @@ class ProductItem extends StatelessWidget {
     //final String idRestaurant =
     //    ModalRoute.of(context).settings.arguments as String;
     final singleProduct = Provider.of<Product>(context, listen: false);
+    bool isFav;
+    isFav =
+        Provider.of<UserProducts>(context).isPartOfFavProduct(singleProduct.id);
+    bool isLoggedIn = Provider.of<Auth>(context).logId == null ? false : true;
 
     return Container(
       child: InkWell(
@@ -58,7 +68,28 @@ class ProductItem extends StatelessWidget {
                             ),
                             softWrap: true,
                             overflow: TextOverflow.fade,
-                          )))
+                          ))),
+                  if (isLoggedIn)
+                    Positioned(
+                      right: 5,
+                      bottom: 5,
+                      child: Container(
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.all(Radius.circular(35)),
+                        ),
+                        child: IconButton(
+                          icon: isFav
+                              ? Icon(Icons.favorite)
+                              : Icon(Icons.favorite_border),
+                          onPressed: () {
+                            _addToFavorite(singleProduct.id, isFav, context);
+                          },
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
                 ],
               ),
               Padding(

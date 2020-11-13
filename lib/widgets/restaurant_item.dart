@@ -159,7 +159,9 @@ class RestaurantItem extends StatelessWidget {
                                 width: 5,
                               ),
                               Text(
-                                singleRestaurant.rating.toString(),
+                                singleRestaurant.rating
+                                    .toStringAsFixed(1)
+                                    .toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,

@@ -1,3 +1,5 @@
+import 'package:FoodSight/providers/userProducts.dart';
+
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
 import './screens/user_form_screen.dart';
@@ -63,6 +65,13 @@ class FoodSight extends StatelessWidget {
           update: (ctx, auth, previousData) => UserRestaurants(
             auth.logId == null ? null : auth.logId,
             previousData == null ? [] : previousData.favRestaurants,
+          ),
+        ),
+        ChangeNotifierProxyProvider<Auth, UserProducts>(
+          create: (ctx) => UserProducts(null, []),
+          update: (ctx, auth, previousData) => UserProducts(
+            auth.logId == null ? null : auth.logId,
+            previousData == null ? [] : previousData.favProducts,
           ),
         ),
       ],

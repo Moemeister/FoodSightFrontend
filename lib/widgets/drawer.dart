@@ -84,7 +84,7 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           SizedBox(height: 20),
-          if (authid != null && authType == "usuario")
+          if (authid != null)
             buildListTile(
               'Show Favorite Restaurants',
               Icons.favorite,
@@ -92,14 +92,15 @@ class MainDrawer extends StatelessWidget {
                 Navigator.of(context).pushNamed(FavRestaurantsScreen.routeName);
               },
             ),
-          if (authid != null && authType == "usuario") SizedBox(height: 20),
-          buildListTile(
-            'Show Favorite Products',
-            Icons.favorite,
-            () {
-              //Navigator.of(context).pushNamed(AuthScreen.routeName);
-            },
-          ),
+          if (authid != null) SizedBox(height: 20),
+          if (authid != null)
+            buildListTile(
+              'Show Favorite Products',
+              Icons.favorite,
+              () {
+                //Navigator.of(context).pushNamed(AuthScreen.routeName);
+              },
+            ),
           Divider(),
           ListTile(
             leading: Icon(Icons.logout),

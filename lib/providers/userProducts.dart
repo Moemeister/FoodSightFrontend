@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class UserRestaurants with ChangeNotifier {
+class UserProducts with ChangeNotifier {
   final String authId;
-  List<String> _restaurantsId;
-  UserRestaurants(this.authId, this._restaurantsId);
+  List<String> _productsIds;
+  UserProducts(this.authId, this._productsIds);
 
-  Future<void> fetchUserFavRestaurants() async {
-    const url = 'https://foodsight-api.herokuapp.com/test/favoriteRestaurant';
+  Future<void> fetchUserFavProducts() async {
+    const url = 'https://foodsight-api.herokuapp.com/test/favoriteProducts';
     try {
       final response = await http.post(
         url,
@@ -24,7 +23,7 @@ class UserRestaurants with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
       extractedData.forEach((key, value) {
-        _restaurantsId.add(value);
+        _productsIds.add(value);
       });
       notifyListeners();
     } catch (e) {
@@ -32,46 +31,46 @@ class UserRestaurants with ChangeNotifier {
     }
   }
 
-  List<String> get favRestaurants {
-    return [..._restaurantsId];
+  List<String> get favProducts {
+    return [..._productsIds];
   }
 
   void cleanList() {
     var distinctIds = [
-      ...{..._restaurantsId}
+      ...{..._productsIds}
     ];
-    _restaurantsId.clear();
-    _restaurantsId = distinctIds;
-    print(_restaurantsId);
+    _productsIds.clear();
+    _productsIds = distinctIds;
+    print(_productsIds);
   }
 
-  bool isPartOfFavRest(String id) {
-    if (_restaurantsId.contains(id)) {
+  bool isPartOfFavProduct(String id) {
+    if (_productsIds.contains(id)) {
       return true;
     } else {
       return false;
     }
   }
 
-  void updateFavRest(String id, bool flag) async {
+  void updateFavProduct(String id, bool flag) async {
     const addFavoriteURL =
-        'https://foodsight-api.herokuapp.com/test/addFavoriteRestaurant';
+        'https://foodsight-api.herokuapp.com/test/addFavoriteProduct';
     const removeFavoriteURL =
-        'https://foodsight-api.herokuapp.com/test/removeFavoriteRestaurant';
+        'https://foodsight-api.herokuapp.com/test/removeFavoriteProduct';
     try {
       if (flag) {
         //Remover Favorito
         final response = await http.post(
           removeFavoriteURL,
           body: {
-            "_restaurantId": id,
+            "_productId": id,
           },
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "_id": authId,
           },
         );
-        _restaurantsId.remove(id);
+        _productsIds.remove(id);
         print(response.body);
         notifyListeners();
       } else {
@@ -79,14 +78,14 @@ class UserRestaurants with ChangeNotifier {
         final response = await http.post(
           addFavoriteURL,
           body: {
-            "restaurantID": id,
+            "productID": id,
           },
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "_id": authId,
           },
         );
-        _restaurantsId.add(id);
+        _productsIds.add(id);
         print(response.body);
         notifyListeners();
       }

@@ -10,6 +10,7 @@ import '../models/product.dart';
 import '../providers/restaurants.dart';
 import '../providers/products.dart';
 import '../providers/auth.dart';
+import '../providers/userProducts.dart';
 import 'package:provider/provider.dart';
 
 class RestaurantsScreen extends StatefulWidget {
@@ -152,9 +153,13 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             Provider.of<UserRestaurants>(context, listen: false)
                 .fetchUserFavRestaurants()
                 .then((_) => {
-                      setState(() {
-                        _isLoading = false;
-                      })
+                      Provider.of<UserProducts>(context, listen: false)
+                          .fetchUserFavProducts()
+                          .then((_) => {
+                                setState(() {
+                                  _isLoading = false;
+                                })
+                              })
                     });
           });
         });
@@ -173,6 +178,17 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                     setState(() {
                       _isLoading = false;
                     })
+                  });
+          Provider.of<UserProducts>(context, listen: false)
+              .fetchUserFavProducts()
+              .then((_) => {
+                    Provider.of<UserProducts>(context, listen: false)
+                        .fetchUserFavProducts()
+                        .then((_) => {
+                              setState(() {
+                                _isLoading = false;
+                              })
+                            })
                   });
         }
         List<Restaurant> restaurants;
