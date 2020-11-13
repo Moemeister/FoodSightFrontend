@@ -140,7 +140,7 @@ class Restaurants with ChangeNotifier {
       print('buenas  tardes' + response.data['photo'].toString());
       final newRestaurant = Restaurant(
         id: response.data['id'],
-        address: restaurant.address,
+        address: address,
         description: restaurant.description,
         email: restaurant.email,
         fbUrl: restaurant.fbUrl,
@@ -182,7 +182,7 @@ class Restaurants with ChangeNotifier {
           'password': newRestaurant.password,
           'description': newRestaurant.description,
           'phone': newRestaurant.phone,
-          'location': newRestaurant.location,
+          'location': '${pickedLocation.latitude},${pickedLocation.longitude}',
           'address': address,
           'rating': newRestaurant.rating,
           'facebook': newRestaurant.fbUrl,
@@ -205,6 +205,7 @@ class Restaurants with ChangeNotifier {
 
         //print(response.body);
         newRestaurant.photoUrl = response.data['photo'].toString();
+        newRestaurant.address = address;
         _items[resIndex] = newRestaurant;
         notifyListeners();
       } catch (error) {
