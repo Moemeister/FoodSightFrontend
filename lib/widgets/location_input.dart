@@ -1,5 +1,4 @@
 import 'package:FoodSight/helpers/location_helper.dart';
-import 'package:FoodSight/models/restaurant.dart';
 import 'package:FoodSight/screens/map_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +6,19 @@ import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   final Function onSelectLocation;
+  final String previewUrl;
 
-  LocationInput(this.onSelectLocation);
+  LocationInput(this.onSelectLocation, this.previewUrl);
 
   @override
-  _LocationInputState createState() => _LocationInputState();
+  _LocationInputState createState() => _LocationInputState(previewUrl);
 }
 
 class _LocationInputState extends State<LocationInput> {
   String _previewImageUrl;
+  String _testUrl;
+
+  _LocationInputState(this._testUrl);
 
   void _showPreview(double lat, double lng) {
     final previewLocationUrl = LocationHelper.generateLocationPreviewImage(
@@ -64,13 +67,13 @@ class _LocationInputState extends State<LocationInput> {
           height: 170,
           width: double.infinity,
           alignment: Alignment.center,
-          child: _previewImageUrl == null
+          child: (_previewImageUrl == null && _testUrl == null)
               ? Text(
                   'No location Chosen',
                   textAlign: TextAlign.center,
                 )
               : Image.network(
-                  _previewImageUrl,
+                  _previewImageUrl == null ? _testUrl : _previewImageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
