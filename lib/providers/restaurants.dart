@@ -51,6 +51,18 @@ class Restaurants with ChangeNotifier {
         .toList();
   }
 
+  List<Restaurant> getFavRestaurantList(List<String> ids) {
+    return _items.where((element) => ids.contains(element.id)).toList();
+  }
+
+  List<Restaurant> getFavListByNameSearch(List<String> ids, String value) {
+    return _items
+        .where((element) =>
+            ids.contains(element.id) &&
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+  }
+
   Restaurant findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
@@ -95,7 +107,7 @@ class Restaurants with ChangeNotifier {
       print('buenas  tardes' + response.data['photo'].toString());
       final newRestaurant = Restaurant(
         id: response.data['id'],
-        address: restaurant.address,
+        address: address,
         description: restaurant.description,
         email: restaurant.email,
         fbUrl: restaurant.fbUrl,
@@ -137,7 +149,7 @@ class Restaurants with ChangeNotifier {
           'password': newRestaurant.password,
           'description': newRestaurant.description,
           'phone': newRestaurant.phone,
-          'location': newRestaurant.location,
+          'location': '${pickedLocation.latitude},${pickedLocation.longitude}',
           'address': address,
           'rating': newRestaurant.rating,
           'facebook': newRestaurant.fbUrl,
@@ -160,6 +172,7 @@ class Restaurants with ChangeNotifier {
 
         //print(response.body);
         newRestaurant.photoUrl = response.data['photo'].toString();
+        newRestaurant.address = address;
         _items[resIndex] = newRestaurant;
         notifyListeners();
       } catch (error) {

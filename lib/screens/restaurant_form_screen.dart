@@ -1,3 +1,5 @@
+import '../helpers/location_helper.dart';
+
 import '../widgets/location_input.dart';
 
 import 'dart:io';
@@ -22,6 +24,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
   final _imageUrlController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _imageUrlFocusNode = FocusNode();
+
   var _editedRestaurant = Restaurant(
     id: null,
     address: 'None',
@@ -53,6 +56,10 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
 
   var _isInit = true;
   var _isloading = false;
+  var latlong;
+  double lat;
+  double long;
+  var previewLocationUrl;
 
   @override
   void initState() {
@@ -81,6 +88,11 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
           'photoUrl': _editedRestaurant.photoUrl,
         };
         _imageUrlController.text = _editedRestaurant.photoUrl;
+        latlong = _editedRestaurant.location.split(",");
+        lat = double.parse(latlong[0]);
+        long = double.parse(latlong[1]);
+        previewLocationUrl = LocationHelper.generateLocationPreviewImage(
+            latitude: lat, longitud: long);
       }
     }
     _isInit = false;
@@ -518,7 +530,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        LocationInput(_selectResAddress),
+                        LocationInput(_selectResAddress, previewLocationUrl),
                       ],
                     ),
                   ),
