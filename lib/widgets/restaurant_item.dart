@@ -6,8 +6,9 @@ import '../models/restaurant.dart';
 import '../screens/restaurant_detail.dart';
 import '../screens/restaurant_form_screen.dart';
 import '../providers/userRestaurants.dart';
+import '../providers/restaurants.dart';
 import '../providers/auth.dart';
-import '../widgets/star_rating_stateful.dart';
+import '../widgets/star_rating.dart';
 
 class RestaurantItem extends StatelessWidget {
   void selectedRestaurant(BuildContext ctx, String id) {
@@ -18,39 +19,59 @@ class RestaurantItem extends StatelessWidget {
     Provider.of<UserRestaurants>(ctx, listen: false).updateFavRest(id, flag);
   }
 
-  void _rateUsButton(BuildContext ctx, String id, String name, double rating) {
+  void _rateUsButton(BuildContext ctx, Restaurant restaurant) {
+    final restaurantProvider = Provider.of<Restaurants>(ctx, listen: false);
+    int rating = 0;
     print("Estoy en el rate us button");
     showDialog(
         context: ctx,
         builder: (BuildContext ctx) {
           return new AlertDialog(
-            title:
-                new Text("Rate $name", style: TextStyle(color: Colors.black)),
+            title: new Text("Rate ${restaurant.name}",
+                style: TextStyle(color: Colors.black)),
             content: Column(
               children: [
                 Text("Our current rate is:"),
                 Container(
                   child: StarRate(
-                    value: rating.round(),
+                    value: restaurant.rating.round(),
                   ),
                 ),
                 Text("Help us with your rating for us :)"),
                 Container(
-                  child: StatefulStarRating(
-                    rate: 0,
-                    isRestaurant: true,
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return StarRating(
+                        onChanged: (index) {
+                          setState(() {
+                            print("Voy a cambiar de valor RESTAURANTE");
+                            rating = index;
+                            restaurantProvider.setRating(
+                                restaurant, rating + .0);
+                          });
+                        },
+                        value: rating,
+                      );
+                    },
                   ),
-                ),
+                )
               ],
             ),
             actions: [
               new FlatButton(
-                child: Text("Rate!"),
-                onPressed: () {
-                  print("Ya me voy, lup!");
-                  Navigator.of(ctx).pop();
-                },
-              )
+                  child: Text("Rate!"),
+                  onPressed: () {
+                    print("Ya me voy, lup!");
+                    restaurantProvider.rateRestaurant(restaurant);
+                    Navigator.of(ctx).pop();
+                  }),
+              new FlatButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    print("Ya me voy, lup!");
+                    restaurantProvider.setRating(restaurant, null);
+                    Navigator.of(ctx).pop();
+                  })
             ],
           );
         });
@@ -143,12 +164,8 @@ class RestaurantItem extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         FlatButton(
-                          onPressed: () => _rateUsButton(
-                              context,
-                              singleRestaurant.id,
-                              singleRestaurant.name,
-                              singleRestaurant.rating),
-                          //TODO Show a dialog, to vote rating
+                          onPressed: () =>
+                              _rateUsButton(context, singleRestaurant),
                           child: Row(
                             children: [
                               Icon(
