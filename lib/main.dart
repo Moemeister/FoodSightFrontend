@@ -1,4 +1,6 @@
 import 'package:FoodSight/providers/userProducts.dart';
+import 'package:FoodSight/screens/fav_products_screen.dart';
+import 'package:FoodSight/screens/product_info.dart';
 
 import './screens/auth_screen.dart';
 import './screens/splash_screen.dart';
@@ -118,6 +120,8 @@ class FoodSight extends StatelessWidget {
             AuthScreen.routeName: (context) => AuthScreen(),
             UserSignupScreen.routeName: (context) => UserSignupScreen(),
             FavRestaurantsScreen.routeName: (context) => FavRestaurantsScreen(),
+            FavProductsScreen.routeName: (context) => FavProductsScreen(),
+            ProductInformation.routeName: (context) => ProductInformation(),
           },
           debugShowCheckedModeBanner: false,
         ),
