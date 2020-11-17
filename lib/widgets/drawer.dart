@@ -1,3 +1,4 @@
+import 'package:FoodSight/screens/fav_products_screen.dart';
 import 'package:FoodSight/screens/fav_restaurants_screen.dart';
 
 import '../providers/auth.dart';
@@ -98,7 +99,7 @@ class MainDrawer extends StatelessWidget {
               'Show Favorite Products',
               Icons.favorite,
               () {
-                //Navigator.of(context).pushNamed(AuthScreen.routeName);
+                Navigator.of(context).pushNamed(FavProductsScreen.routeName);
               },
             ),
           Divider(),

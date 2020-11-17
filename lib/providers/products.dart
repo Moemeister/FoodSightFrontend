@@ -71,6 +71,18 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
+  List<Product> getFavProductList(List<String> ids) {
+    return _items.where((element) => ids.contains(element.id)).toList();
+  }
+
+  List<Product> getFavListByNameSearch(List<String> ids, String value) {
+    return _items
+        .where((element) =>
+            ids.contains(element.id) &&
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+  }
+
   Product findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }

@@ -1,4 +1,5 @@
 import 'package:FoodSight/providers/products.dart';
+import 'package:FoodSight/screens/product_info.dart';
 import '../providers/userProducts.dart';
 import '../screens/product_form_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,10 @@ import '../screens/restaurant_detail.dart';
 import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
+  void selectedProduct(BuildContext ctx, String id) {
+    Navigator.of(ctx).pushNamed(ProductInformation.routeName, arguments: id);
+  }
+
   void _deleteProduct(String id, BuildContext ctx) {
     Provider.of<Products>(ctx, listen: false).deleteProduct(id);
   }
@@ -28,7 +33,7 @@ class ProductItem extends StatelessWidget {
 
     return Container(
       child: InkWell(
-        onTap: () {},
+        onTap: () => selectedProduct(context, singleProduct.id),
         child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
