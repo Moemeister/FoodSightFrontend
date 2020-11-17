@@ -30,6 +30,7 @@ class ProductItem extends StatelessWidget {
     isFav =
         Provider.of<UserProducts>(context).isPartOfFavProduct(singleProduct.id);
     bool isLoggedIn = Provider.of<Auth>(context).logId == null ? false : true;
+    final authType = Provider.of<Auth>(context).loginType;
 
     return Container(
       child: InkWell(
@@ -74,7 +75,7 @@ class ProductItem extends StatelessWidget {
                             softWrap: true,
                             overflow: TextOverflow.fade,
                           ))),
-                  if (isLoggedIn)
+                  if (isLoggedIn && authType == "usuario")
                     Positioned(
                       right: 5,
                       bottom: 5,
@@ -106,22 +107,24 @@ class ProductItem extends StatelessWidget {
                       children: [
                         Icon(Icons.attach_money),
                         Text("${singleProduct.price}"),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                                ProductFormScreen.routeName,
-                                arguments: singleProduct.id);
-                          },
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            _deleteProduct(singleProduct.id, context);
-                          },
-                          color: Theme.of(context).primaryColor,
-                        ),
+                        if (isLoggedIn && authType == "restaurante")
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                  ProductFormScreen.routeName,
+                                  arguments: singleProduct.id);
+                            },
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        if (isLoggedIn && authType == "restaurante")
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _deleteProduct(singleProduct.id, context);
+                            },
+                            color: Theme.of(context).primaryColor,
+                          ),
                       ],
                     )
                   ],

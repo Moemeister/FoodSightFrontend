@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum TypeLogin { IsRestaurant, IsUser, IsGeneral }
+//enum TypeLogin { IsRestaurant, IsUser, IsGeneral }
 
 class Auth with ChangeNotifier {
   String _id;
-  TypeLogin whatIs = TypeLogin.IsGeneral;
+  String whatIs = "GENERAL";
   String email;
   String password;
 
@@ -32,12 +32,11 @@ class Auth with ChangeNotifier {
 
       final responseData = json.decode(response.body);
       _id = responseData.toString();
-      whatIs = TypeLogin.IsRestaurant;
+      whatIs = "RESTAURANT";
       print('SOY UN RESTAURANTE ' + loginType);
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
-      final userData = jsonEncode(
-          {'id': _id, 'loginType': TypeLogin.IsRestaurant.toString()});
+      final userData = jsonEncode({'id': _id, 'loginType': "RESTAURANT"});
       prefs.setString('userLogged', userData);
       if (responseData.toString().contains('error')) {
         //print('SOY UN RESTAURANTE aqui error?');
@@ -63,13 +62,12 @@ class Auth with ChangeNotifier {
         throw responseData['error'];
       }
       _id = responseData.toString();
-      whatIs = TypeLogin.IsUser;
+      whatIs = "USER";
       print('SOY UN USUARIO' + _id);
       print(json.decode(response.body));
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
-      final userData =
-          jsonEncode({'id': _id, 'loginType': TypeLogin.IsUser.toString()});
+      final userData = jsonEncode({'id': _id, 'loginType': "USER"});
       prefs.setString('userLogged', userData);
     } catch (e) {
       throw e;
@@ -106,7 +104,7 @@ class Auth with ChangeNotifier {
 
   Future<void> logout() async {
     _id = null;
-    whatIs = TypeLogin.IsGeneral;
+    whatIs = "GENERAL";
     notifyListeners();
     print('LOOK YOU LOGGED OUT ' + loginType);
     final prefs = await SharedPreferences.getInstance();
@@ -115,13 +113,13 @@ class Auth with ChangeNotifier {
 
   String get loginType {
     switch (whatIs) {
-      case TypeLogin.IsGeneral:
+      case "GENERAL":
         return 'general';
         break;
-      case TypeLogin.IsRestaurant:
+      case "RESTAURANT":
         return 'restaurante';
         break;
-      case TypeLogin.IsUser:
+      case "USER":
         return 'usuario';
         break;
       default:
@@ -135,11 +133,10 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey('userLogged')) {
       return false;
     }
-    final extractedUserData =
-        json.decode(prefs.getString('userLogged')) as Map<String, Object>;
-    _id = extractedUserData['id'];
-    whatIs = extractedUserData['loginType'];
-    notifyListeners();
+    final extractedUserData = json.decode(prefs.get('userLogged'));
+    _id = extractedUserData['id'].toString();
+    whatIs = extractedUserData['loginType'].toString();
+    //notifyListeners();
     return true;
   }
 }

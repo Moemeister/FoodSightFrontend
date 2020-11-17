@@ -28,6 +28,38 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
+  Widget welcomeText(BuildContext context, String loginType) {
+    String txt;
+    switch (loginType) {
+      case "restaurante":
+        txt = "Bienvenido\nRestaurante!";
+        break;
+      case "usuario":
+        txt = "Bienvenido\nUsuario chulo!";
+        break;
+      case "general":
+        txt = "Bienvenido!\n";
+        break;
+    }
+    return Container(
+      height: 200,
+      padding: EdgeInsets.all(20),
+      width: double.infinity,
+      alignment: Alignment.bottomCenter,
+      color: Theme.of(context).primaryColor,
+      child: FittedBox(
+        child: Text(
+          txt,
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 60,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authid = Provider.of<Auth>(context).logId;
@@ -36,56 +68,47 @@ class MainDrawer extends StatelessWidget {
         child: SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          Container(
-            height: 200,
-            padding: EdgeInsets.all(20),
-            width: double.infinity,
-            alignment: Alignment.bottomRight,
-            color: Theme.of(context).primaryColor,
-            child: Text(
-              'User Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 50,
-                color: Colors.white,
-              ),
+          welcomeText(context, authType),
+          if (authid != null && authType != "restaurante") SizedBox(height: 20),
+          if (authid != null && authType != "restaurante")
+            buildListTile(
+              'Restaurants',
+              Icons.restaurant,
+              () {
+                Navigator.of(context).pushReplacementNamed('/');
+              },
             ),
-          ),
+          if (authid != null && authType == "restaurante") SizedBox(height: 20),
+          if (authid != null && authType == "restaurante")
+            buildListTile(
+              'Edit your information',
+              Icons.edit,
+              () {
+                Navigator.of(context).pushNamed(RestaurantFormScreen.routeName,
+                    arguments: authid);
+              },
+            ),
+          if (authid != null && authType == "restaurante") SizedBox(height: 20),
+          if (authid != null && authType == "restaurante")
+            buildListTile(
+              'Add New Product',
+              Icons.add_circle_outline,
+              () {
+                Navigator.of(context)
+                    .popAndPushNamed(ProductFormScreen.routeName);
+              },
+            ),
+          if (authid == null) SizedBox(height: 20),
+          if (authid == null)
+            buildListTile(
+              'Login',
+              Icons.lightbulb_outline,
+              () {
+                Navigator.of(context).pushNamed(AuthScreen.routeName);
+              },
+            ),
           SizedBox(height: 20),
-          buildListTile(
-            'Restaurants',
-            Icons.restaurant,
-            () {
-              Navigator.of(context).pushReplacementNamed('/');
-            },
-          ),
-          SizedBox(height: 20),
-          buildListTile(
-            'Add New Restaurant',
-            Icons.add_circle_outline,
-            () {
-              Navigator.of(context).pushNamed(RestaurantFormScreen.routeName);
-            },
-          ),
-          SizedBox(height: 20),
-          buildListTile(
-            'Add New Product',
-            Icons.add_circle_outline,
-            () {
-              Navigator.of(context)
-                  .popAndPushNamed(ProductFormScreen.routeName);
-            },
-          ),
-          SizedBox(height: 20),
-          buildListTile(
-            'Login logic',
-            Icons.lightbulb_outline,
-            () {
-              Navigator.of(context).pushNamed(AuthScreen.routeName);
-            },
-          ),
-          SizedBox(height: 20),
-          if (authid != null)
+          if (authid != null && authType == "usuario")
             buildListTile(
               'Show Favorite Restaurants',
               Icons.favorite,
@@ -93,8 +116,8 @@ class MainDrawer extends StatelessWidget {
                 Navigator.of(context).pushNamed(FavRestaurantsScreen.routeName);
               },
             ),
-          if (authid != null) SizedBox(height: 20),
-          if (authid != null)
+          if (authid != null && authType == "usuario") SizedBox(height: 20),
+          if (authid != null && authType == "usuario")
             buildListTile(
               'Show Favorite Products',
               Icons.favorite,

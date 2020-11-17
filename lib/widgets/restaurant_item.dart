@@ -84,6 +84,7 @@ class RestaurantItem extends StatelessWidget {
     isFav = Provider.of<UserRestaurants>(context)
         .isPartOfFavRest(singleRestaurant.id);
     bool isLoggedIn = Provider.of<Auth>(context).logId == null ? false : true;
+    final authType = Provider.of<Auth>(context).loginType;
     return Container(
       child: InkWell(
         onTap: () => selectedRestaurant(context, singleRestaurant.id),
@@ -133,7 +134,7 @@ class RestaurantItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (isLoggedIn)
+                  if (isLoggedIn && authType == "usuario")
                     Positioned(
                       right: 5,
                       bottom: 5,
@@ -210,23 +211,23 @@ class RestaurantItem extends StatelessWidget {
                         SizedBox(
                           width: 20,
                         ),
-                        Container(
-                          width: 3,
-                          height: 30,
-                          decoration: BoxDecoration(color: Colors.black),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                                RestaurantFormScreen.routeName,
-                                arguments: singleRestaurant.id);
-                          },
-                          color: Theme.of(context).primaryColor,
-                        ),
+                        //Container(
+                        //  width: 3,
+                        //  height: 30,
+                        //  decoration: BoxDecoration(color: Colors.black),
+                        //),
+                        // SizedBox(
+                        //   width: 5,
+                        // ),
+                        // IconButton(
+                        //   icon: Icon(Icons.edit),
+                        //   onPressed: () {
+                        //     Navigator.of(context).pushNamed(
+                        //         RestaurantFormScreen.routeName,
+                        //         arguments: singleRestaurant.id);
+                        //   },
+                        //   color: Theme.of(context).primaryColor,
+                        // ),
                       ],
                     ),
                   ],
