@@ -179,7 +179,7 @@ class Restaurants with ChangeNotifier {
           '_id': id,
           'name': newRestaurant.name,
           'email': newRestaurant.email,
-          'password': newRestaurant.password,
+          //'password': newRestaurant.password,
           'description': newRestaurant.description,
           'phone': newRestaurant.phone,
           'location': '${pickedLocation.latitude},${pickedLocation.longitude}',

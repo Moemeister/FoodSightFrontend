@@ -60,6 +60,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
   double lat;
   double long;
   var previewLocationUrl;
+  var producId;
 
   @override
   void initState() {
@@ -71,7 +72,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final producId = ModalRoute.of(context).settings.arguments as String;
+      producId = ModalRoute.of(context).settings.arguments as String;
       if (producId != null) {
         _editedRestaurant =
             Provider.of<Restaurants>(context, listen: false).findById(producId);
@@ -83,7 +84,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
           'instaUrl': _editedRestaurant.instaUrl,
           'location': _editedRestaurant.location,
           'name': _editedRestaurant.name,
-          'password': _editedRestaurant.password,
+          //'password': _editedRestaurant.password,
           'phone': _editedRestaurant.phone,
           'photoUrl': _editedRestaurant.photoUrl,
         };
@@ -154,6 +155,7 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
         _isloading = true;
       });
       if (_editedRestaurant.id != null) {
+        _selectResAddress(lat, long);
         await Provider.of<Restaurants>(context, listen: false).updateRestaurant(
             _editedRestaurant.id, _editedRestaurant, image, _pickedLocation);
         setState(() {
@@ -304,41 +306,42 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                           },
                         ),
                         //password
-                        TextFormField(
-                          initialValue: _initValues['password'],
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.lock),
-                            labelText: 'Password',
+                        if (producId == null)
+                          TextFormField(
+                            initialValue: _initValues['password'],
+                            decoration: const InputDecoration(
+                              icon: Icon(Icons.lock),
+                              labelText: 'Password',
+                            ),
+                            obscureText: true,
+                            onFieldSubmitted: (value) {
+                              //FocusScope.of(context).requestFocus(_emailFocusNode);
+                            },
+                            onSaved: (value) {
+                              _editedRestaurant = Restaurant(
+                                id: _editedRestaurant.id,
+                                address: _editedRestaurant.address,
+                                description: _editedRestaurant.description,
+                                email: _editedRestaurant.email,
+                                fbUrl: _editedRestaurant.fbUrl,
+                                rating: _editedRestaurant.rating,
+                                instaUrl: _editedRestaurant.instaUrl,
+                                location: _editedRestaurant.location,
+                                name: _editedRestaurant.name,
+                                password: value,
+                                phone: _editedRestaurant.phone,
+                                photoUrl: _editedRestaurant.photoUrl,
+                                priceCategory: _editedRestaurant.priceCategory,
+                              );
+                            },
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'El password no puede estar vacío';
+                              }
+                              return null;
+                            },
+                            //textInputAction: TextInputAction.next,
                           ),
-                          obscureText: true,
-                          onFieldSubmitted: (value) {
-                            //FocusScope.of(context).requestFocus(_emailFocusNode);
-                          },
-                          onSaved: (value) {
-                            _editedRestaurant = Restaurant(
-                              id: _editedRestaurant.id,
-                              address: _editedRestaurant.address,
-                              description: _editedRestaurant.description,
-                              email: _editedRestaurant.email,
-                              fbUrl: _editedRestaurant.fbUrl,
-                              rating: _editedRestaurant.rating,
-                              instaUrl: _editedRestaurant.instaUrl,
-                              location: _editedRestaurant.location,
-                              name: _editedRestaurant.name,
-                              password: value,
-                              phone: _editedRestaurant.phone,
-                              photoUrl: _editedRestaurant.photoUrl,
-                              priceCategory: _editedRestaurant.priceCategory,
-                            );
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'El password no puede estar vacío';
-                            }
-                            return null;
-                          },
-                          //textInputAction: TextInputAction.next,
-                        ),
                         //description
                         TextFormField(
                           initialValue: _initValues['description'],
