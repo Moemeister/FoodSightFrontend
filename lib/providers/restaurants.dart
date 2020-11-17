@@ -199,9 +199,13 @@ class Restaurants with ChangeNotifier {
 
     _restaurant.rating = null;
 
-    int statusCode = response.statusCode;
+    int index = _items.indexWhere((element) => element.id == restaurant.id);
 
-    String body = response.body;
-    print("Status Code: $statusCode. Body: $body");
+    _items.elementAt(index).rating = json.decode(response.body)['rating'];
+
+    //int statusCode = response.statusCode;
+    //String body = response.body;
+    //print("Status Code: $statusCode. Body: $body");
+    notifyListeners();
   }
 }
