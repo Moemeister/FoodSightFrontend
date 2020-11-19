@@ -393,6 +393,12 @@ class _RestaurantFormScreenState extends State<RestaurantFormScreen> {
                           keyboardType: TextInputType.phone,
                           //textInputAction: TextInputAction.next,
                           //focusNode: _emailFocusNode,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'El teléfono no debe estar vacío';
+                            }
+                            return null;
+                          },
                           onSaved: (value) {
                             _editedRestaurant = Restaurant(
                               id: _editedRestaurant.id,
