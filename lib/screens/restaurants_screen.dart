@@ -12,6 +12,7 @@ import '../providers/products.dart';
 import '../providers/auth.dart';
 import '../providers/userProducts.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class RestaurantsScreen extends StatefulWidget {
   @override
@@ -223,17 +224,27 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     super.didChangeDependencies();
   }
 
+  Future<void> _refresh(BuildContext context) async {
+    //Phoenix.rebirth(context);
+    Provider.of<Restaurants>(context, listen: false).cleanRestaurants();
+    Provider.of<Products>(context, listen: false).cleanProducts();
+    await Navigator.popAndPushNamed(context, "/");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: searchBar.build(context),
       key: _scaffoldKey,
       drawer: MainDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : RestaurantListView(_selectedPriceCategory, _searchValue),
+      body: RefreshIndicator(
+        onRefresh: () => _refresh(context),
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : RestaurantListView(_selectedPriceCategory, _searchValue),
+      ),
     );
   }
 }

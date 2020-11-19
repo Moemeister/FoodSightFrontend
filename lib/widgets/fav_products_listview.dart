@@ -18,14 +18,14 @@ class FavProductsListView extends StatelessWidget {
     final favProductsIds = productData.favProducts;
 
     if (searchValue == "null") {
-      final products = Provider.of<Products>(context)
-          .getFavProductList(favProductsIds);
+      final products =
+          Provider.of<Products>(context).getFavProductList(favProductsIds);
       return Center(
         child: ListView.builder(
           itemCount: products.length,
           itemBuilder: (context, index) => ChangeNotifierProvider.value(
             value: products[index],
-            child: ProductItem(),
+            child: ProductItem("Usuario"),
           ),
         ),
       );
@@ -37,7 +37,7 @@ class FavProductsListView extends StatelessWidget {
           itemCount: products.length,
           itemBuilder: (context, index) => ChangeNotifierProvider.value(
             value: products[index],
-            child: ProductItem(),
+            child: ProductItem("Usuario"),
           ),
         ),
       );

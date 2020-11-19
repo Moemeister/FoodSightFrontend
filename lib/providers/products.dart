@@ -214,4 +214,9 @@ class Products with ChangeNotifier {
             element.name.toLowerCase().contains(value.toLowerCase()))
         .toList();
   }
+
+  void cleanProducts() {
+    _items.clear();
+    notifyListeners();
+  }
 }

@@ -208,4 +208,9 @@ class Restaurants with ChangeNotifier {
     //print("Status Code: $statusCode. Body: $body");
     notifyListeners();
   }
+
+  void cleanRestaurants() {
+    _items.clear();
+    notifyListeners();
+  }
 }

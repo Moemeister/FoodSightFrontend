@@ -1,5 +1,6 @@
 import 'package:FoodSight/screens/fav_products_screen.dart';
 import 'package:FoodSight/screens/fav_restaurants_screen.dart';
+import 'package:FoodSight/screens/restaurant_detail.dart';
 
 import '../providers/auth.dart';
 import '../screens/auth_screen.dart';
@@ -96,6 +97,18 @@ class MainDrawer extends StatelessWidget {
               () {
                 Navigator.of(context)
                     .popAndPushNamed(ProductFormScreen.routeName);
+              },
+            ),
+          if (authid != null && authType == "restaurante") SizedBox(height: 20),
+          if (authid != null && authType == "restaurante")
+            buildListTile(
+              'Show your products',
+              Icons.apps,
+              () {
+                Navigator.of(context)
+                    .pushNamed(RestaurantDetail.routeName, arguments: authid);
+                //Navigator.of(context)
+                //    .popAndPushNamed(ProductFormScreen.routeName);
               },
             ),
           if (authid == null) SizedBox(height: 20),

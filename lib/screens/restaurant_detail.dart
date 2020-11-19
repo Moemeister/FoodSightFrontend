@@ -83,21 +83,21 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
           child: ListView.builder(
             itemBuilder: (context, index) => ChangeNotifierProvider.value(
               value: products[index],
-              child: ProductItem(),
+              child: ProductItem(id),
             ),
             itemCount: products.length,
           ),
         ),
       );
     } else {
-      final products = productsData.getListByNameSearch(id,_searchValue);
+      final products = productsData.getListByNameSearch(id, _searchValue);
       return Scaffold(
         appBar: searchBar.build(context),
         body: Center(
           child: ListView.builder(
             itemBuilder: (context, index) => ChangeNotifierProvider.value(
               value: products[index],
-              child: ProductItem(),
+              child: ProductItem(id),
             ),
             itemCount: products.length,
           ),

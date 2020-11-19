@@ -9,6 +9,8 @@ import '../screens/restaurant_detail.dart';
 import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
+  String id;
+  ProductItem(this.id);
   void selectedProduct(BuildContext ctx, String id) {
     Navigator.of(ctx).pushNamed(ProductInformation.routeName, arguments: id);
   }
@@ -31,6 +33,12 @@ class ProductItem extends StatelessWidget {
         Provider.of<UserProducts>(context).isPartOfFavProduct(singleProduct.id);
     bool isLoggedIn = Provider.of<Auth>(context).logId == null ? false : true;
     final authType = Provider.of<Auth>(context).loginType;
+    final authID = Provider.of<Auth>(context).logId;
+
+    bool showButtons = false;
+    if (id != "Usuario" && id == authID) {
+      showButtons = true;
+    }
 
     return Container(
       child: InkWell(
@@ -107,7 +115,9 @@ class ProductItem extends StatelessWidget {
                       children: [
                         Icon(Icons.attach_money),
                         Text("${singleProduct.price}"),
-                        if (isLoggedIn && authType == "restaurante")
+                        if (isLoggedIn &&
+                            authType == "restaurante" &&
+                            showButtons)
                           IconButton(
                             icon: Icon(Icons.edit),
                             onPressed: () {
@@ -117,7 +127,9 @@ class ProductItem extends StatelessWidget {
                             },
                             color: Theme.of(context).primaryColor,
                           ),
-                        if (isLoggedIn && authType == "restaurante")
+                        if (isLoggedIn &&
+                            authType == "restaurante" &&
+                            showButtons)
                           IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
