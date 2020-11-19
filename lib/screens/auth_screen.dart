@@ -51,33 +51,43 @@ class AuthScreen extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
-                        ..translate(-10.0),
-                      // ..translate(-10.0),
+                      height: 160,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context).accentColor,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 8,
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                      ),
-                      child: Text(
-                        'Foodsight',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColorDark,
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/image.png"),
                         ),
                       ),
                     ),
                   ),
+                  // Flexible(
+                  //   child: Container(
+                  //     margin: EdgeInsets.only(bottom: 20.0),
+                  //     padding:
+                  //         EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
+                  //     transform: Matrix4.rotationZ(-8 * pi / 180)
+                  //       ..translate(-10.0),
+                  //     // ..translate(-10.0),
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(20),
+                  //       color: Theme.of(context).accentColor,
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //           blurRadius: 8,
+                  //           color: Colors.black26,
+                  //           offset: Offset(0, 2),
+                  //         )
+                  //       ],
+                  //     ),
+                  //     child: Text(
+                  //       'Foodsight',
+                  //       style: TextStyle(
+                  //         color: Theme.of(context).primaryColorDark,
+                  //         fontSize: 35,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Flexible(
                     flex: deviceSize.width > 600 ? 2 : 1,
                     child: AuthCard(),
