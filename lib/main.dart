@@ -1,5 +1,26 @@
-import 'package:flutter/services.dart';
+import 'package:FoodSight/providers/userProducts.dart';
+import 'package:FoodSight/screens/fav_products_screen.dart';
+import 'package:FoodSight/screens/product_info.dart';
+
+import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
+import './screens/user_form_screen.dart';
+
+import './providers/products.dart';
+import './screens/product_form_screen.dart';
+import './screens/restaurant_form_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:provider/provider.dart';
+
+import './screens/restaurants_screen.dart';
+import './screens/restaurant_detail.dart';
+import './screens/restaurant_info.dart';
+import './providers/restaurants.dart';
+import 'providers/auth.dart';
+import 'providers/userRestaurants.dart';
+import './screens/fav_restaurants_screen.dart';
 
 //Colores de la app no mover de acá.
 const _primaryColor = Color(0xFFFF5722);
@@ -26,50 +47,84 @@ void main() {
 class FoodSight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'FoodSight',
-      theme: ThemeData(
-        errorColor: Colors.red,
-        primaryColor: _primaryColor,
-        primaryColorLight: _lightPrimaryColor,
-        primaryColorDark: _darkPrimaryColor,
-        accentColor: _accentColor,
-        dividerColor: _dividerColor,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('FoodSight'),
-      ),
-      body: Column(
-        //TODO: Esta columna es solo de ejemplo, acá ira el Widget principal..
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            child: FittedBox(
-              child: Text(
-                'Headline1',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1
-                    .apply(color: _primaryText),
-              ),
-            ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Restaurants(),
+        ),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (ctx) => Products(null, []),
+          update: (ctx, auth, previousProducts) => Products(
+            auth.logId == null ? null : auth.logId,
+            previousProducts == null ? [] : previousProducts.items,
           ),
-        ],
+        ),
+        ChangeNotifierProxyProvider<Auth, UserRestaurants>(
+          create: (ctx) => UserRestaurants(null, []),
+          update: (ctx, auth, previousData) => UserRestaurants(
+            auth.logId == null ? null : auth.logId,
+            previousData == null ? [] : previousData.favRestaurants,
+          ),
+        ),
+        ChangeNotifierProxyProvider<Auth, UserProducts>(
+          create: (ctx) => UserProducts(null, []),
+          update: (ctx, auth, previousData) => UserProducts(
+            auth.logId == null ? null : auth.logId,
+            previousData == null ? [] : previousData.favProducts,
+          ),
+        ),
+      ],
+      child: Consumer<Auth>(
+        builder: (ctx, authData, _) => MaterialApp(
+          title: 'FoodSight',
+          theme: ThemeData(
+            errorColor: Colors.red,
+            primaryColor: _primaryColor,
+            primaryColorLight: _lightPrimaryColor,
+            primaryColorDark: _darkPrimaryColor,
+            accentColor: _accentColor,
+            dividerColor: _dividerColor,
+            fontFamily: 'RobotoCondensed',
+            textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'RobotoCondensed',
+                    fontWeight: FontWeight.bold,
+                    color: _textsIcons,
+                  ),
+                  headline5: TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'RobotoCondensed',
+                    fontWeight: FontWeight.bold,
+                    color: _primaryText,
+                  ),
+                ),
+          ),
+          routes: {
+            '/': (context) => FutureBuilder(
+                  future: authData.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : RestaurantsScreen(),
+                ),
+            RestaurantDetail.routeName: (context) => RestaurantDetail(),
+            RestaurantInformation.routeName: (context) =>
+                RestaurantInformation(),
+            RestaurantFormScreen.routeName: (context) => RestaurantFormScreen(),
+            ProductFormScreen.routeName: (context) => ProductFormScreen(),
+            AuthScreen.routeName: (context) => AuthScreen(),
+            UserSignupScreen.routeName: (context) => UserSignupScreen(),
+            FavRestaurantsScreen.routeName: (context) => FavRestaurantsScreen(),
+            FavProductsScreen.routeName: (context) => FavProductsScreen(),
+            ProductInformation.routeName: (context) => ProductInformation(),
+          },
+          debugShowCheckedModeBanner: false,
+        ),
       ),
     );
   }
